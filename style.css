@@ -1,0 +1,189 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #e8f4f8;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 30px 16px;
+}
+
+.container {
+  background: #fff;
+  width: 820px;
+  border: 1px solid #b0c8d8;
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(0,80,140,0.10);
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+  background: linear-gradient(135deg, #00548a 0%, #0077b6 100%);
+  color: #fff;
+  padding: 18px 28px 14px;
+}
+.header h1 { font-size: 1.55rem; font-weight: 700; letter-spacing: 0.5px; }
+.header p  { font-size: 0.82rem; margin-top: 3px; opacity: 0.85; }
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 14px 28px 10px;
+  border-bottom: 2px solid #0077b6;
+}
+.form-title { font-size: 1rem; font-weight: 600; color: #00548a; }
+
+.date-box {
+  text-align: right;
+  font-size: 0.82rem;
+  color: #444;
+}
+.date-box span {
+  display: inline-block;
+  border: 1px solid #aaa;
+  padding: 3px 10px;
+  border-radius: 3px;
+  background: #f5f9fc;
+  font-weight: 600;
+  color: #00548a;
+  min-width: 105px;
+  text-align: center;
+}
+
+/* ── Sections ── */
+.section {
+  padding: 16px 28px 6px;
+}
+.section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #0077b6;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #cce0ef;
+}
+
+/* ── Grid fields ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px 24px; }
+
+.field { display: flex; flex-direction: column; margin-bottom: 6px; }
+.field label {
+  font-size: 0.78rem;
+  color: #555;
+  margin-bottom: 3px;
+  font-weight: 600;
+}
+.field input, .field select, .field textarea {
+  border: 1px solid #b0c4d4;
+  border-radius: 4px;
+  padding: 6px 9px;
+  font-size: 0.85rem;
+  color: #222;
+  background: #f8fbfd;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: #0077b6;
+  background: #fff;
+}
+.field textarea { resize: vertical; min-height: 56px; }
+.field select { cursor: pointer; }
+
+/* ── Prescription Table ── */
+.table-wrap { padding: 0 28px 6px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+thead tr { background: #00548a; color: #fff; }
+thead th {
+  padding: 7px 10px;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+tbody tr { background: #f8fbfd; }
+tbody tr:nth-child(even) { background: #eef5fa; }
+tbody td {
+  padding: 5px 6px;
+  text-align: center;
+  border-bottom: 1px solid #d0e4ef;
+}
+tbody td select, tbody td input {
+  width: 100%;
+  border: 1px solid #c0d4e4;
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 0.82rem;
+  background: #fff;
+  outline: none;
+}
+tbody td select:focus, tbody td input:focus { border-color: #0077b6; }
+.amount-cell {
+  background: #fffbe6;
+  font-weight: 600;
+  color: #7a5900;
+}
+tfoot td {
+  padding: 7px 10px;
+  font-weight: 700;
+  text-align: right;
+  color: #00548a;
+  border-top: 2px solid #0077b6;
+}
+tfoot .total-val {
+  color: #c0392b;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ── Buttons ── */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  padding: 14px 28px 20px;
+  border-top: 1px solid #d0e4ef;
+  margin-top: 8px;
+}
+.btn {
+  padding: 8px 26px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary   { background: #0077b6; color: #fff; }
+.btn-primary:hover   { background: #005f96; }
+.btn-danger    { background: #c0392b; color: #fff; }
+.btn-danger:hover    { background: #a93226; }
+.btn-secondary { background: #6c757d; color: #fff; }
+.btn-secondary:hover { background: #565e64; }
+
+/* ── Status badges ── */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+.badge-active  { background: #d4edda; color: #155724; }
+.badge-pending { background: #fff3cd; color: #856404; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .container { width: 100%; }
+}

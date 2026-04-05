@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WZY Hospital Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>WZY Hospital Management System</h1>
+    <p>Patient Treatment &amp; Prescription Input Form</p>
+  </div>
+
+  <!-- Form title + date -->
+  <div class="form-header">
+    <div class="form-title">Treatment Form – Outpatient / Inpatient Consultation</div>
+    <div class="date-box">
+      Treatment Date:<br/>
+      <span id="displayDate"></span>
+    </div>
+  </div>
+
+  <!-- ── Patient Information ── -->
+  <div class="section">
+    <div class="section-title">Patient Information</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Patient ID</label>
+        <input type="text" id="patientID" placeholder="e.g. P00123" />
+      </div>
+      <div class="field" style="grid-column: span 2;">
+        <label>Patient Name</label>
+        <input type="text" id="patientName" placeholder="Full name" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="patientPhone" placeholder="01X-XXXXXXX" />
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <select id="patientGender">
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="date" id="patientDOB" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Treatment Details ── -->
+  <div class="section">
+    <div class="section-title">Treatment Details</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Doctor (Staff ID)</label>
+        <select id="doctorID">
+          <option value="">-- Assign Doctor --</option>
+          <option value="D001">D001 – Dr. Lim Wei Jie (Cardiology)</option>
+          <option value="D002">D002 – Dr. Siti Aminah (Orthopedic)</option>
+          <option value="D003">D003 – Dr. Raj Kumar (General)</option>
+          <option value="D004">D004 – Dr. Tan Mei Ling (Pediatric)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Consultation Type</label>
+        <select id="consultType">
+          <option value="">-- Select Type --</option>
+          <option>Walk-In</option>
+          <option>Appointment</option>
+          <option>Emergency</option>
+          <option>Follow-Up</option>
+          <option>Teleconsultation</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Treatment Method</label>
+        <select id="treatmentMethod">
+          <option value="">-- Select Method --</option>
+          <option>Medication</option>
+          <option>Surgery</option>
+          <option>Physiotherapy</option>
+          <option>Observation</option>
+          <option>Diagnostic Test</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Treatment Status</label>
+        <select id="treatmentStatus">
+          <option value="">-- Select Status --</option>
+          <option>Ongoing</option>
+          <option>Completed</option>
+          <option>Pending</option>
+          <option>Cancelled</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-top: 4px;">
+      <label>Clinical Notes</label>
+      <textarea id="notes" placeholder="Enter diagnosis, observations, or treatment notes here..."></textarea>
+    </div>
+  </div>
+
+  <!-- ── Prescription Table ── -->
+  <div class="table-wrap">
+    <div class="section-title" style="padding: 16px 0 8px;">Prescription</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:32px;">#</th>
+          <th>Medicine</th>
+          <th style="width:130px;">Dosage</th>
+          <th style="width:120px;">Frequency</th>
+          <th style="width:110px;">Start Date</th>
+          <th style="width:110px;">End Date</th>
+        </tr>
+      </thead>
+      <tbody id="prescriptionBody">
+        <!-- rows injected by script.js -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6" style="text-align:right; font-size:0.78rem; color:#888; font-weight:400;">
+            * All prescriptions are subject to pharmacist verification.
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- ── Payment ── -->
+  <div class="section">
+    <div class="section-title">Payment</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Payment Method</label>
+        <select id="payMethod">
+          <option value="">-- Select --</option>
+          <option>Cash</option>
+          <option>Credit Card</option>
+          <option>Debit Card</option>
+          <option>Online Transfer</option>
+          <option>Insurance</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (RM)</label>
+        <input type="number" id="payAmount" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Payment Status</label>
+        <select id="payStatus">
+          <option value="">-- Select --</option>
+          <option>Paid</option>
+          <option>Pending</option>
+          <option>Waived</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Buttons ── -->
+  <div class="btn-row">
+    <button class="btn btn-primary"   onclick="submitForm()">Submit Treatment</button>
+    <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+    <button class="btn btn-danger"    onclick="cancelForm()">Cancel</button>
+  </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
