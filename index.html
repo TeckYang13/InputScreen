@@ -55,7 +55,7 @@
     <div class="grid-3">
       <div class="field">
         <label>Patient ID <span class="req">*</span></label>
-        <input type="text" id="patientID" placeholder="e.g. P00123" />
+        <input type="text" id="patientID" placeholder="e.g. PAT-2025-001" />
       </div>
       <div class="field col-span-2">
         <label>Patient Name <span class="req">*</span></label>
@@ -96,24 +96,21 @@
         <label>Doctor (Staff ID) <span class="req">*</span></label>
         <select id="doctorID">
           <option value="">-- Assign Doctor --</option>
-          <option value="D001">D001 – Dr. Lim Wei Jie</option>
-          <option value="D002">D002 – Dr. Siti Aminah</option>
-          <option value="D003">D003 – Dr. Raj Kumar</option>
-          <option value="D004">D004 – Dr. Tan Mei Ling</option>
-          <option value="D005">D005 – Dr. Ahmad Faris</option>
-          <option value="D006">D006 – Dr. Priya Nair</option>
+          <option value="STF-00001">STF-00001 – Dr. Lim Wei Jie</option>
+          <option value="STF-00002">STF-00002 – Dr. Siti Aminah</option>
+          <option value="STF-00003">STF-00003 – Dr. Raj Kumar</option>
+          <option value="STF-00004">STF-00004 – Dr. Tan Mei Ling</option>
+          <option value="STF-00005">STF-00005 – Dr. Ahmad Faris</option>
+          <option value="STF-00006">STF-00006 – Dr. Priya Nair</option>
         </select>
       </div>
       <div class="field">
         <label>Consultation Type <span class="req">*</span></label>
         <select id="consultType" onchange="toggleAdmission()">
           <option value="">-- Select Type --</option>
-          <option>Walk-In</option>
-          <option>Appointment</option>
-          <option>Emergency</option>
+          <option>Initial Visit</option>
           <option>Follow-Up</option>
-          <option>Teleconsultation</option>
-          <option>Inpatient</option>
+          <option>Emergency</option>
         </select>
       </div>
       <div class="field">
@@ -122,19 +119,20 @@
           <option value="">-- Select Method --</option>
           <option>Medication</option>
           <option>Surgery</option>
-          <option>Physiotherapy</option>
+          <option>Physical Therapy</option>
           <option>Observation</option>
           <option>Diagnostic Test</option>
+          <option>Counseling</option>
         </select>
       </div>
       <div class="field">
         <label>Treatment Status <span class="req">*</span></label>
         <select id="treatmentStatus">
           <option value="">-- Select Status --</option>
-          <option>Ongoing</option>
           <option>Completed</option>
-          <option>Pending</option>
-          <option>Cancelled</option>
+          <option>In Progress</option>
+          <option>Ordered</option>
+          <option>Refused</option>
         </select>
       </div>
     </div>
@@ -231,10 +229,10 @@
         <label>Administrator ID <span class="req">*</span></label>
         <select id="administratorID">
           <option value="">-- Select Administrator --</option>
-          <option value="A001">A001 – Sarah Lee</option>
-          <option value="A002">A002 – John Tan</option>
-          <option value="A003">A003 – Mary Wong</option>
-          <option value="A004">A004 – David Lim</option>
+          <option value="STF-00007">STF-00007 – Sarah Lee</option>
+          <option value="STF-00008">STF-00008 – John Tan</option>
+          <option value="STF-00009">STF-00009 – Mary Wong</option>
+          <option value="STF-00010">STF-00010 – David Lim</option>
         </select>
       </div>
       <div class="field">
@@ -242,10 +240,8 @@
         <select id="payMethod">
           <option value="">-- Select --</option>
           <option>Cash</option>
-          <option>Credit Card</option>
-          <option>Debit Card</option>
+          <option>TNG (Touch 'n Go)</option>
           <option>Online Transfer</option>
-          <option>Insurance</option>
         </select>
       </div>
       <div class="field">
