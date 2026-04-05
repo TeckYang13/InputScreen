@@ -449,6 +449,20 @@ tbody td input:focus {
 .btn-print:hover     { background: #00695c; }
 
 /* ══════════════════════════════════════
+   FLATPICKR THEME OVERRIDE
+══════════════════════════════════════ */
+.flatpickr-calendar { font-family: 'Inter', sans-serif; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.14); }
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover { background: var(--blue-700); border-color: var(--blue-700); }
+.flatpickr-day:hover { background: var(--blue-100); }
+.flatpickr-months .flatpickr-month { background: var(--blue-700); border-radius: 10px 10px 0 0; color: #fff; }
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year { color: #fff; }
+.flatpickr-weekday { color: var(--blue-700); font-weight: 600; }
+.flatpickr-prev-month svg, .flatpickr-next-month svg { fill: #fff; }
+.flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: var(--blue-100); }
+
+/* ══════════════════════════════════════
    UTILITIES
 ══════════════════════════════════════ */
 .hidden { display: none !important; }

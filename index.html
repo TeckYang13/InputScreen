@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -75,7 +76,7 @@
       </div>
       <div class="field">
         <label>Date of Birth <span class="req">*</span></label>
-        <input type="date" id="patientDOB" />
+        <input type="text" id="patientDOB" placeholder="DD/MM/YYYY" readonly />
       </div>
       <div class="field">
         <label>Email <span class="req">*</span></label>
@@ -278,6 +279,7 @@
 
 </div><!-- end .container -->
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="script.js"></script>
 </body>
 </html>

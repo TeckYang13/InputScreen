@@ -1,4 +1,13 @@
 /* ══════════════════════════════════════
+   FLATPICKR – DATE OF BIRTH
+══════════════════════════════════════ */
+flatpickr('#patientDOB', {
+  dateFormat: 'd/m/Y',
+  maxDate: 'today',
+  allowInput: false,
+});
+
+/* ══════════════════════════════════════
    DATE & TREATMENT ID
 ══════════════════════════════════════ */
 const today = new Date();
