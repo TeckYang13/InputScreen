@@ -58,6 +58,29 @@ function initPatients() {
   }
 }
 
+/* ══════════════════════════════════════
+   BOOKING DATA (localStorage)
+══════════════════════════════════════ */
+const sampleBookings = [
+  { id:'APT-20250406-001', patientID:'PAT-2025-001', type:'Appointment', date:'07/04/2025', time:'09:00 AM', dept:'DPT-004', reason:'Routine check-up and blood pressure monitoring.' },
+  { id:'APT-20250406-002', patientID:'PAT-2025-002', type:'Appointment', date:'07/04/2025', time:'10:00 AM', dept:'DPT-008', reason:'Follow-up on previous gynaecology consultation.' },
+  { id:'APT-20250406-003', patientID:'PAT-2025-004', type:'Appointment', date:'08/04/2025', time:'02:30 PM', dept:'DPT-001', reason:'Chest discomfort, requested cardiology review.' },
+  { id:'APT-20250406-004', patientID:'PAT-2025-007', type:'Appointment', date:'08/04/2025', time:'11:00 AM', dept:'DPT-009', reason:'Persistent headache and dizziness for 2 weeks.' },
+  { id:'APT-20250406-005', patientID:'PAT-2025-003', type:'Emergency',   date:'06/04/2025', time:'',         dept:'DPT-007', reason:'Fell down stairs, suspected fracture on left leg.' },
+  { id:'APT-20250406-006', patientID:'PAT-2025-006', type:'Emergency',   date:'06/04/2025', time:'',         dept:'DPT-001', reason:'Severe chest pain and shortness of breath.' },
+  { id:'APT-20250406-007', patientID:'PAT-2025-005', type:'Walk-In',     date:'06/04/2025', time:'',         dept:'DPT-004', reason:'High fever for 3 days, requesting consultation.' },
+  { id:'APT-20250406-008', patientID:'PAT-2025-008', type:'Walk-In',     date:'06/04/2025', time:'',         dept:'DPT-006', reason:'Needs X-ray for knee pain.' },
+  { id:'APT-20250406-009', patientID:'PAT-2025-010', type:'Walk-In',     date:'06/04/2025', time:'',         dept:'DPT-004', reason:'General health screening requested.' },
+];
+
+function initBookings() {
+  if (!localStorage.getItem('bookings')) {
+    localStorage.setItem('bookings', JSON.stringify(sampleBookings));
+  }
+}
+
+initBookings();
+
 function loadPatientDropdown(filteredList) {
   const patients = filteredList || JSON.parse(localStorage.getItem('patients') || '[]');
   const sel = document.getElementById('patientID');
