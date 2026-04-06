@@ -116,11 +116,21 @@ function fillPatientInfo() {
 initPatients();
 
 /* ══════════════════════════════════════
-   FLATPICKR – DATE OF BIRTH
+   FLATPICKR – DATE FIELDS
 ══════════════════════════════════════ */
 flatpickr('#patientDOB', {
   dateFormat: 'd/m/Y',
   maxDate: 'today',
+  allowInput: false,
+});
+
+flatpickr('#admissionDate', {
+  dateFormat: 'd/m/Y',
+  allowInput: false,
+});
+
+flatpickr('#dischargeDate', {
+  dateFormat: 'd/m/Y',
   allowInput: false,
 });
 
