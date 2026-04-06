@@ -1,4 +1,98 @@
 /* ══════════════════════════════════════
+   STAFF DATA (localStorage)
+══════════════════════════════════════ */
+const sampleStaff = [
+  { id:'STF-00001', deptID:'DPT-004', name:'Dr. Alan Lau',        role:'Doctor',         phone:'012-2233445', email:'alan.lau@wzy.com',  dob:'12/05/1975', address:'1, Jalan Kiara, KL.' },
+  { id:'STF-00002', deptID:'DPT-003', name:'Nurse Sarah Bee',      role:'Nurse',          phone:'017-8899001', email:'sarah.b@wzy.com',   dob:'22/08/1990', address:'45, Lorong Maju, PJ.' },
+  { id:'STF-00003', deptID:'DPT-005', name:'Tan Wei Kiat',         role:'Pharmacist',     phone:'011-5544332', email:'wk.tan@wzy.com',    dob:'05/11/1988', address:'12, Jalan SS15, Subang.' },
+  { id:'STF-00004', deptID:'DPT-001', name:'Dr. Lim Geok Eng',    role:'Doctor',         phone:'016-6677889', email:'geok.lim@wzy.com',  dob:'30/01/1968', address:'8, Condo Jaya, Cheras.' },
+  { id:'STF-00005', deptID:'DPT-002', name:'Dr. Rajesh Kumar',    role:'Doctor',         phone:'014-1122334', email:'rajesh.k@wzy.com',  dob:'14/09/1982', address:'19, Jalan Ipoh, KL.' },
+  { id:'STF-00006', deptID:'DPT-006', name:'Linda Chong',          role:'Lab Technician', phone:'013-9988776', email:'l.chong@wzy.com',   dob:'09/03/1995', address:'3, Taman Midah, KL.' },
+  { id:'STF-00007', deptID:'DPT-003', name:'Rose Receptionist',    role:'Receptionist',   phone:'018-4455667', email:'rose.r@wzy.com',    dob:'18/12/1998', address:'22, Jalan Gasing, PJ.' },
+  { id:'STF-00008', deptID:'DPT-007', name:'Dr. Sofia Ahmad',     role:'Doctor',         phone:'019-3344556', email:'sofia.a@wzy.com',   dob:'02/06/1985', address:'10, Villa 8, Shah Alam.' },
+  { id:'STF-00009', deptID:'DPT-004', name:'Ahmad Fauzi',          role:'General Worker', phone:'012-7788990', email:'fauzi.a@wzy.com',   dob:'11/10/1980', address:'5, Kg Baru, KL.' },
+  { id:'STF-00010', deptID:'DPT-010', name:'Catherine Teoh',       role:'Administrator',  phone:'017-2233114', email:'cath.t@wzy.com',    dob:'25/04/1978', address:'15, Jalan Bukit, PJ.' },
+  { id:'STF-00011', deptID:'DPT-010', name:'LynzXuan',             role:'Administrator',  phone:'019-2122222', email:'lynz.x@wzy.com',    dob:'21/07/1999', address:'6, Jalan Sity, KL.' },
+];
+
+function initStaff() {
+  if (!localStorage.getItem('staff')) {
+    localStorage.setItem('staff', JSON.stringify(sampleStaff));
+  }
+}
+
+function loadStaffDropdown(selectID, role) {
+  const staff = JSON.parse(localStorage.getItem('staff') || '[]');
+  const sel   = document.getElementById(selectID);
+  const label = selectID === 'doctorID' ? '-- Assign Doctor --' : '-- Select Administrator --';
+  sel.innerHTML = `<option value="">${label}</option>`;
+  staff.filter(s => s.role === role).forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = `${s.id} – ${s.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+initStaff();
+
+/* ══════════════════════════════════════
+   PATIENT DATA (localStorage)
+══════════════════════════════════════ */
+const samplePatients = [
+  { id:'PAT-2025-001', name:'John Tan Ah Kao',   phone:'012-3456789', email:'john.tan@email.com',   gender:'Male',   dob:'15/05/1985', address:'12, Jalan SS2, Petaling Jaya, 47500, Selangor' },
+  { id:'PAT-2025-002', name:'Siti Aminah Binti Ali', phone:'017-6543210', email:'siti@email.com',   gender:'Female', dob:'10/07/1990', address:'5, Jalan Melati, Taman Melati, 53100, Kuala Lumpur' },
+  { id:'PAT-2025-003', name:'Robert Low',         phone:'011-9988776', email:'rlow@email.com',      gender:'Male',   dob:'22/03/1978', address:'88, Lorong Bukit, Penang, 10050, Penang' },
+  { id:'PAT-2025-004', name:'Priya Kaur',         phone:'014-4433221', email:'priya.k@email.com',   gender:'Female', dob:'30/08/2000', address:'3, Jalan Gasing, PJ, 46000, Selangor' },
+  { id:'PAT-2025-005', name:'David Lim Teck Wee', phone:'018-6655443', email:'davidlim@email.com',  gender:'Male',   dob:'12/12/1965', address:'21, Condo Ria, Subang, 40150, Selangor' },
+  { id:'PAT-2025-006', name:'Mike Wong',          phone:'013-1112223', email:'mike.w@email.com',    gender:'Male',   dob:'05/01/1982', address:'10, Kg Baru, Ampang, 68000, Selangor' },
+  { id:'PAT-2025-007', name:'Nurul Huda',         phone:'013-4445556', email:'nurul.h@email.com',   gender:'Female', dob:'09/07/1995', address:'10, Kg Baru, Selayang, 68100, Selangor' },
+  { id:'PAT-2025-008', name:'Kevin Raj',          phone:'019-7778889', email:'kevin@email.com',     gender:'Male',   dob:'25/03/1982', address:'2, Villa 22, Shah Alam, 40150, Selangor' },
+  { id:'PAT-2025-009', name:'Chong Wei Ling',     phone:'012-5554433', email:'wling@email.com',     gender:'Female', dob:'14/11/1990', address:'Green Lane, Ipoh, 31400, Perak' },
+  { id:'PAT-2025-010', name:'Sarah Jenkins',      phone:'011-3332211', email:'sarah.j@email.com',   gender:'Female', dob:'06/03/1975', address:'9, Residency, Cyberjaya, 63000, Selangor' },
+];
+
+function initPatients() {
+  if (!localStorage.getItem('patients')) {
+    localStorage.setItem('patients', JSON.stringify(samplePatients));
+  }
+}
+
+function loadPatientDropdown() {
+  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+  const sel = document.getElementById('patientID');
+  sel.innerHTML = '<option value="">-- Select Patient --</option>';
+  patients.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.id} – ${p.name}`;
+    sel.appendChild(opt);
+  });
+}
+
+function fillPatientInfo() {
+  const id       = document.getElementById('patientID').value;
+  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+  const patient  = patients.find(p => p.id === id);
+  const fields   = ['patientName','patientPhone','patientEmail','patientGender','patientDOB','patientAddress'];
+
+  if (patient) {
+    document.getElementById('patientName').value    = patient.name;
+    document.getElementById('patientPhone').value   = patient.phone;
+    document.getElementById('patientEmail').value   = patient.email;
+    document.getElementById('patientGender').value  = patient.gender;
+    document.getElementById('patientDOB').value     = patient.dob;
+    document.getElementById('patientAddress').value = patient.address;
+    fields.forEach(f => clearError(f));
+  } else {
+    fields.forEach(f => { document.getElementById(f).value = ''; });
+  }
+  clearError('patientID');
+}
+
+initPatients();
+
+/* ══════════════════════════════════════
    FLATPICKR – DATE OF BIRTH
 ══════════════════════════════════════ */
 flatpickr('#patientDOB', {
@@ -28,6 +122,10 @@ function formatTID(counter) {
 let currentCounter = parseInt(localStorage.getItem('treatmentCounter') || '1');
 let currentTreatmentID = formatTID(currentCounter);
 document.getElementById('treatmentID').textContent = currentTreatmentID;
+
+loadPatientDropdown();
+loadStaffDropdown('doctorID', 'Doctor');
+loadStaffDropdown('administratorID', 'Administrator');
 
 
 /* ══════════════════════════════════════
@@ -240,8 +338,9 @@ function clearForm() {
     el.value = '';
   });
 
-  // Reset doctor dropdown
+  // Reset dropdowns
   document.getElementById('doctorID').selectedIndex = 0;
+  loadPatientDropdown();
 
   // Hide admission section
   document.getElementById('admissionSection').classList.add('hidden');
@@ -257,7 +356,7 @@ function clearForm() {
 }
 
 function cancelForm() {
-  if (confirm('Cancel and discard all entries?')) clearForm();
+  if (confirm('Cancel and discard all entries?')) window.location.href = 'index.html';
 }
 
 function dismissBanner() {

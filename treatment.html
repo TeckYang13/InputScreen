@@ -29,16 +29,14 @@
   <!-- ── Header ── -->
   <div class="header">
     <div class="header-brand">
+      <a href="index.html" class="back-btn" title="Back to Dashboard"><i class="fas fa-arrow-left"></i></a>
       <img src="logo.png" class="header-logo" alt="WZY Hospital Logo" />
       <div>
         <h1>WZY Hospital</h1>
         <p>Management System &nbsp;·&nbsp; Electronic Medical Record</p>
       </div>
     </div>
-    <div class="header-right">
-      <div class="header-badge">Patient Treatment Form</div>
-      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
-    </div>
+    <div class="header-badge">Patient Treatment Form</div>
   </div>
 
   <!-- ── Info Bar: Treatment ID + Date ── -->
@@ -57,37 +55,35 @@
   <div class="card">
     <div class="card-title"><i class="fas fa-user-injured"></i> Patient Information</div>
     <div class="grid-3">
-      <div class="field">
+      <div class="field col-span-3">
         <label>Patient ID <span class="req">*</span></label>
-        <input type="text" id="patientID" placeholder="e.g. PAT-2025-001" />
-      </div>
-      <div class="field col-span-2">
-        <label>Patient Name <span class="req">*</span></label>
-        <input type="text" id="patientName" placeholder="Full name as per IC" />
-      </div>
-      <div class="field">
-        <label>Phone <span class="req">*</span></label>
-        <input type="tel" id="patientPhone" placeholder="01X-XXXXXXX" />
-      </div>
-      <div class="field">
-        <label>Gender <span class="req">*</span></label>
-        <select id="patientGender">
-          <option value="">-- Select --</option>
-          <option>Male</option>
-          <option>Female</option>
+        <select id="patientID" onchange="fillPatientInfo()">
+          <option value="">-- Select Patient --</option>
         </select>
       </div>
-      <div class="field">
-        <label>Date of Birth <span class="req">*</span></label>
-        <input type="text" id="patientDOB" placeholder="DD/MM/YYYY" readonly />
-      </div>
-      <div class="field">
-        <label>Email <span class="req">*</span></label>
-        <input type="email" id="patientEmail" placeholder="example@email.com" />
-      </div>
       <div class="field col-span-2">
+        <label>Patient Name</label>
+        <input type="text" id="patientName" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <input type="text" id="patientGender" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="text" id="patientDOB" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="text" id="patientPhone" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="patientEmail" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field col-span-3">
         <label>Address</label>
-        <input type="text" id="patientAddress" placeholder="Full residential address" />
+        <input type="text" id="patientAddress" class="auto-filled" readonly placeholder="Auto-filled" />
       </div>
     </div>
   </div>
@@ -100,12 +96,6 @@
         <label>Doctor (Staff ID) <span class="req">*</span></label>
         <select id="doctorID">
           <option value="">-- Assign Doctor --</option>
-          <option value="STF-00001">STF-00001 – Dr. Lim Wei Jie</option>
-          <option value="STF-00002">STF-00002 – Dr. Siti Aminah</option>
-          <option value="STF-00003">STF-00003 – Dr. Raj Kumar</option>
-          <option value="STF-00004">STF-00004 – Dr. Tan Mei Ling</option>
-          <option value="STF-00005">STF-00005 – Dr. Ahmad Faris</option>
-          <option value="STF-00006">STF-00006 – Dr. Priya Nair</option>
         </select>
       </div>
       <div class="field">
@@ -233,10 +223,6 @@
         <label>Administrator ID <span class="req">*</span></label>
         <select id="administratorID">
           <option value="">-- Select Administrator --</option>
-          <option value="STF-00007">STF-00007 – Sarah Lee</option>
-          <option value="STF-00008">STF-00008 – John Tan</option>
-          <option value="STF-00009">STF-00009 – Mary Wong</option>
-          <option value="STF-00010">STF-00010 – David Lim</option>
         </select>
       </div>
       <div class="field">
@@ -266,17 +252,17 @@
 
   <!-- ── Action Buttons ── -->
   <div class="btn-row no-print">
-    <button class="btn btn-primary" onclick="submitForm()">
-      <i class="fas fa-save"></i> Submit Treatment
-    </button>
     <button class="btn btn-secondary" onclick="clearForm()">
       <i class="fas fa-eraser"></i> Clear Form
     </button>
-    <button class="btn btn-danger" onclick="cancelForm()">
-      <i class="fas fa-times"></i> Cancel
-    </button>
     <button class="btn btn-print" onclick="printReceipt()">
       <i class="fas fa-print"></i> Print Receipt
+    </button>
+    <button class="btn btn-danger" onclick="cancelForm()" style="margin-left:auto;">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button class="btn btn-primary" onclick="submitForm()">
+      <i class="fas fa-save"></i> Submit Treatment
     </button>
   </div>
 

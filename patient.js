@@ -87,6 +87,20 @@ function submitForm() {
     return;
   }
 
+  // Save to localStorage
+  const address  = `${document.getElementById('streetAddress').value}, ${document.getElementById('city').value}, ${document.getElementById('postcode').value}, ${document.getElementById('state').value}`;
+  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+  patients.push({
+    id:      currentPatientID,
+    name:    document.getElementById('patientName').value,
+    phone:   document.getElementById('patientPhone').value,
+    email:   document.getElementById('patientEmail').value,
+    gender:  document.getElementById('patientGender').value,
+    dob:     document.getElementById('patientDOB').value,
+    address: address,
+  });
+  localStorage.setItem('patients', JSON.stringify(patients));
+
   // Show success banner
   document.getElementById('successPatientID').textContent =
     `Patient ID: ${currentPatientID} has been registered.`;

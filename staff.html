@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Patient Registration – WZY Hospital</title>
+  <title>Staff Registration – WZY Hospital</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -17,8 +17,8 @@
   <div class="success-inner">
     <div class="success-icon-wrap"><i class="fas fa-check-circle"></i></div>
     <div class="success-text">
-      <strong>Patient Registered Successfully</strong>
-      <div id="successPatientID" class="success-tid"></div>
+      <strong>Staff Registered Successfully</strong>
+      <div id="successStaffID" class="success-tid"></div>
     </div>
     <button class="dismiss-btn" onclick="dismissBanner()"><i class="fas fa-times"></i></button>
   </div>
@@ -36,14 +36,14 @@
         <p>Management System &nbsp;·&nbsp; Electronic Medical Record</p>
       </div>
     </div>
-    <div class="header-badge">Patient Registration Form</div>
+    <div class="header-badge">Staff Registration Form</div>
   </div>
 
-  <!-- ── Info Bar: Patient ID + Date ── -->
+  <!-- ── Info Bar ── -->
   <div class="info-bar">
     <div class="info-bar-left">
-      <span class="info-label"><i class="fas fa-id-card"></i> Patient ID</span>
-      <span class="tid-badge" id="patientIDDisplay"></span>
+      <span class="info-label"><i class="fas fa-id-badge"></i> Staff ID</span>
+      <span class="tid-badge" id="staffIDDisplay"></span>
     </div>
     <div class="info-bar-right">
       <span class="info-label"><i class="fas fa-calendar-alt"></i> Registration Date</span>
@@ -57,11 +57,11 @@
     <div class="grid-3">
       <div class="field col-span-2">
         <label>Full Name <span class="req">*</span></label>
-        <input type="text" id="patientName" placeholder="Full name as per IC" />
+        <input type="text" id="staffName" placeholder="Full name" />
       </div>
       <div class="field">
         <label>Gender <span class="req">*</span></label>
-        <select id="patientGender">
+        <select id="staffGender">
           <option value="">-- Select --</option>
           <option>Male</option>
           <option>Female</option>
@@ -69,60 +69,60 @@
       </div>
       <div class="field">
         <label>Date of Birth <span class="req">*</span></label>
-        <input type="text" id="patientDOB" placeholder="DD/MM/YYYY" readonly />
+        <input type="text" id="staffDOB" placeholder="DD/MM/YYYY" readonly />
       </div>
       <div class="field">
         <label>Phone <span class="req">*</span></label>
-        <input type="tel" id="patientPhone" placeholder="01X-XXXXXXX" />
+        <input type="tel" id="staffPhone" placeholder="01X-XXXXXXX" />
       </div>
       <div class="field">
         <label>Email <span class="req">*</span></label>
-        <input type="email" id="patientEmail" placeholder="example@email.com" />
+        <input type="email" id="staffEmail" placeholder="name@wzy.com" />
+      </div>
+      <div class="field col-span-3">
+        <label>Address <span class="req">*</span></label>
+        <input type="text" id="staffAddress" placeholder="Full residential address" />
       </div>
     </div>
   </div>
 
-  <!-- ── Address ── -->
+  <!-- ── Employment Information ── -->
   <div class="card">
-    <div class="card-title"><i class="fas fa-map-marker-alt"></i> Address</div>
+    <div class="card-title"><i class="fas fa-briefcase"></i> Employment Information</div>
     <div class="grid-2">
-      <div class="field col-span-2">
-        <label>Street Address <span class="req">*</span></label>
-        <input type="text" id="streetAddress" placeholder="e.g. No. 12, Jalan SS2, PJ" />
-      </div>
       <div class="field">
-        <label>City <span class="req">*</span></label>
-        <input type="text" id="city" placeholder="e.g. Petaling Jaya" />
-      </div>
-      <div class="field">
-        <label>State <span class="req">*</span></label>
-        <select id="state">
-          <option value="">-- Select State --</option>
-          <option>Johor</option>
-          <option>Kedah</option>
-          <option>Kelantan</option>
-          <option>Kuala Lumpur</option>
-          <option>Melaka</option>
-          <option>Negeri Sembilan</option>
-          <option>Pahang</option>
-          <option>Penang</option>
-          <option>Perak</option>
-          <option>Perlis</option>
-          <option>Putrajaya</option>
-          <option>Sabah</option>
-          <option>Sarawak</option>
-          <option>Selangor</option>
-          <option>Terengganu</option>
+        <label>Role <span class="req">*</span></label>
+        <select id="staffRole">
+          <option value="">-- Select Role --</option>
+          <option>Doctor</option>
+          <option>Nurse</option>
+          <option>Pharmacist</option>
+          <option>Lab Technician</option>
+          <option>Receptionist</option>
+          <option>Administrator</option>
+          <option>General Worker</option>
         </select>
       </div>
       <div class="field">
-        <label>Postcode <span class="req">*</span></label>
-        <input type="text" id="postcode" placeholder="e.g. 47500" maxlength="5" />
+        <label>Department <span class="req">*</span></label>
+        <select id="deptID">
+          <option value="">-- Select Department --</option>
+          <option value="DPT-001">DPT-001 – Cardiology (Heart)</option>
+          <option value="DPT-002">DPT-002 – Pediatrics (Children)</option>
+          <option value="DPT-003">DPT-003 – Emergency (Urgent Care)</option>
+          <option value="DPT-004">DPT-004 – General Medicine (Internal Health)</option>
+          <option value="DPT-005">DPT-005 – Pharmacy (Medication)</option>
+          <option value="DPT-006">DPT-006 – Radiology (X-rays / Scans)</option>
+          <option value="DPT-007">DPT-007 – Orthopedics (Bones / Joints)</option>
+          <option value="DPT-008">DPT-008 – Obstetrics &amp; Gynae (Women's Health)</option>
+          <option value="DPT-009">DPT-009 – Neurology (Brain / Nerves)</option>
+          <option value="DPT-010">DPT-010 – Administration (Management &amp; Billing)</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <!-- ── Action Buttons ── -->
+  <!-- ── Buttons ── -->
   <div class="btn-row no-print">
     <button class="btn btn-secondary" onclick="clearForm()">
       <i class="fas fa-eraser"></i> Clear Form
@@ -134,13 +134,13 @@
       <i class="fas fa-times"></i> Cancel
     </button>
     <button class="btn btn-primary" onclick="submitForm()">
-      <i class="fas fa-user-plus"></i> Register Patient
+      <i class="fas fa-user-tie"></i> Register Staff
     </button>
   </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="patient.js"></script>
+<script src="staff.js"></script>
 </body>
 </html>

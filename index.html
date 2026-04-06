@@ -8,119 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .dashboard-body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px 48px;
-      gap: 24px;
-    }
-    .dash-container {
-      width: 900px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-    }
-    .dash-welcome {
-      background: #f8faff;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .dash-welcome-text h2 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #1565c0;
-      margin-bottom: 4px;
-    }
-    .dash-welcome-text p {
-      font-size: 0.82rem;
-      color: #6b7280;
-    }
-    .dash-date {
-      font-size: 0.82rem;
-      color: #6b7280;
-      text-align: right;
-    }
-    .dash-date strong {
-      display: block;
-      color: #1565c0;
-      font-size: 1rem;
-    }
-    .dash-modules {
-      background: #f1f5f9;
-      padding: 28px 32px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-    .module-card {
-      background: #fff;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      padding: 28px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      text-decoration: none;
-      transition: transform 0.18s, box-shadow 0.18s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-    .module-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-    .module-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-    }
-    .module-icon.blue  { background: #e3f2fd; color: #1565c0; }
-    .module-icon.teal  { background: #e0f2f1; color: #00897b; }
-    .module-icon.amber { background: #fff8e1; color: #f57f17; }
-    .module-icon.red   { background: #ffebee; color: #c62828; }
-    .module-card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a202c;
-      margin: 0;
-    }
-    .module-card p {
-      font-size: 0.8rem;
-      color: #6b7280;
-      line-height: 1.5;
-      margin: 0;
-      flex: 1;
-    }
-    .module-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-    .module-link.blue  { color: #1565c0; }
-    .module-link.teal  { color: #00897b; }
-    .module-link.amber { color: #f57f17; }
-    .module-link.red   { color: #c62828; }
-    .dash-footer {
-      background: #fff;
-      border-top: 1px solid #e2e8f0;
-      padding: 14px 32px;
-      text-align: center;
-      font-size: 0.76rem;
-      color: #9ca3af;
-    }
-  </style>
 </head>
 <body class="dashboard-body">
 
@@ -168,6 +55,14 @@
       <span class="module-link teal">Open Form <i class="fas fa-arrow-right"></i></span>
     </a>
 
+    <!-- Staff Registration -->
+    <a class="module-card" href="staff.html">
+      <div class="module-icon amber"><i class="fas fa-user-tie"></i></div>
+      <h3>Staff Registration</h3>
+      <p>Register new hospital staff members. Assign role and department — doctors, nurses, administrators and more.</p>
+      <span class="module-link amber">Open Form <i class="fas fa-arrow-right"></i></span>
+    </a>
+
   </div>
 
   <!-- Footer -->
@@ -177,12 +72,6 @@
 
 </div>
 
-<script>
-  const today = new Date();
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('dashDate').innerHTML =
-    `<strong>${days[today.getDay()]}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}</strong>`;
-</script>
+<script src="dashboard.js"></script>
 </body>
 </html>
