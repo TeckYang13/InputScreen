@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Patient Registration – WZY Hospital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Success Banner -->
+<div id="successBanner" class="success-banner hidden">
+  <div class="success-inner">
+    <div class="success-icon-wrap"><i class="fas fa-check-circle"></i></div>
+    <div class="success-text">
+      <strong>Patient Registered Successfully</strong>
+      <div id="successPatientID" class="success-tid"></div>
+    </div>
+    <button class="dismiss-btn" onclick="dismissBanner()"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="header-brand">
+      <img src="logo.png" class="header-logo" alt="WZY Hospital Logo" />
+      <div>
+        <h1>WZY Hospital</h1>
+        <p>Management System &nbsp;·&nbsp; Electronic Medical Record</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">Patient Registration Form</div>
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+  </div>
+
+  <!-- ── Info Bar: Patient ID + Date ── -->
+  <div class="info-bar">
+    <div class="info-bar-left">
+      <span class="info-label"><i class="fas fa-id-card"></i> Patient ID</span>
+      <span class="tid-badge" id="patientIDDisplay"></span>
+    </div>
+    <div class="info-bar-right">
+      <span class="info-label"><i class="fas fa-calendar-alt"></i> Registration Date</span>
+      <span class="date-badge" id="displayDate"></span>
+    </div>
+  </div>
+
+  <!-- ── Personal Information ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-user"></i> Personal Information</div>
+    <div class="grid-3">
+      <div class="field col-span-2">
+        <label>Full Name <span class="req">*</span></label>
+        <input type="text" id="patientName" placeholder="Full name as per IC" />
+      </div>
+      <div class="field">
+        <label>Gender <span class="req">*</span></label>
+        <select id="patientGender">
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date of Birth <span class="req">*</span></label>
+        <input type="text" id="patientDOB" placeholder="DD/MM/YYYY" readonly />
+      </div>
+      <div class="field">
+        <label>Phone <span class="req">*</span></label>
+        <input type="tel" id="patientPhone" placeholder="01X-XXXXXXX" />
+      </div>
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="patientEmail" placeholder="example@email.com" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Address ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-map-marker-alt"></i> Address</div>
+    <div class="grid-2">
+      <div class="field col-span-2">
+        <label>Street Address <span class="req">*</span></label>
+        <input type="text" id="streetAddress" placeholder="e.g. No. 12, Jalan SS2, PJ" />
+      </div>
+      <div class="field">
+        <label>City <span class="req">*</span></label>
+        <input type="text" id="city" placeholder="e.g. Petaling Jaya" />
+      </div>
+      <div class="field">
+        <label>State <span class="req">*</span></label>
+        <select id="state">
+          <option value="">-- Select State --</option>
+          <option>Johor</option>
+          <option>Kedah</option>
+          <option>Kelantan</option>
+          <option>Kuala Lumpur</option>
+          <option>Melaka</option>
+          <option>Negeri Sembilan</option>
+          <option>Pahang</option>
+          <option>Penang</option>
+          <option>Perak</option>
+          <option>Perlis</option>
+          <option>Putrajaya</option>
+          <option>Sabah</option>
+          <option>Sarawak</option>
+          <option>Selangor</option>
+          <option>Terengganu</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Postcode <span class="req">*</span></label>
+        <input type="text" id="postcode" placeholder="e.g. 47500" maxlength="5" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Action Buttons ── -->
+  <div class="btn-row no-print">
+    <button class="btn btn-primary" onclick="submitForm()">
+      <i class="fas fa-user-plus"></i> Register Patient
+    </button>
+    <button class="btn btn-secondary" onclick="clearForm()">
+      <i class="fas fa-eraser"></i> Clear Form
+    </button>
+    <button class="btn btn-danger" onclick="cancelForm()">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button class="btn btn-print" onclick="window.print()">
+      <i class="fas fa-print"></i> Print
+    </button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="patient.js"></script>
+</body>
+</html>

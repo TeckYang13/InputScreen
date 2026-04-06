@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WZY Hospital Management System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Success Banner -->
+<div id="successBanner" class="success-banner hidden">
+  <div class="success-inner">
+    <div class="success-icon-wrap"><i class="fas fa-check-circle"></i></div>
+    <div class="success-text">
+      <strong>Treatment Record Submitted Successfully</strong>
+      <div id="successTreatmentID" class="success-tid"></div>
+    </div>
+    <button class="dismiss-btn" onclick="dismissBanner()"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="header-brand">
+      <img src="logo.png" class="header-logo" alt="WZY Hospital Logo" />
+      <div>
+        <h1>WZY Hospital</h1>
+        <p>Management System &nbsp;·&nbsp; Electronic Medical Record</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">Patient Treatment Form</div>
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+  </div>
+
+  <!-- ── Info Bar: Treatment ID + Date ── -->
+  <div class="info-bar">
+    <div class="info-bar-left">
+      <span class="info-label"><i class="fas fa-file-medical"></i> Treatment ID</span>
+      <span class="tid-badge" id="treatmentID"></span>
+    </div>
+    <div class="info-bar-right">
+      <span class="info-label"><i class="fas fa-calendar-alt"></i> Treatment Date</span>
+      <span class="date-badge" id="displayDate"></span>
+    </div>
+  </div>
+
+  <!-- ── Patient Information ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-user-injured"></i> Patient Information</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Patient ID <span class="req">*</span></label>
+        <input type="text" id="patientID" placeholder="e.g. PAT-2025-001" />
+      </div>
+      <div class="field col-span-2">
+        <label>Patient Name <span class="req">*</span></label>
+        <input type="text" id="patientName" placeholder="Full name as per IC" />
+      </div>
+      <div class="field">
+        <label>Phone <span class="req">*</span></label>
+        <input type="tel" id="patientPhone" placeholder="01X-XXXXXXX" />
+      </div>
+      <div class="field">
+        <label>Gender <span class="req">*</span></label>
+        <select id="patientGender">
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date of Birth <span class="req">*</span></label>
+        <input type="text" id="patientDOB" placeholder="DD/MM/YYYY" readonly />
+      </div>
+      <div class="field">
+        <label>Email <span class="req">*</span></label>
+        <input type="email" id="patientEmail" placeholder="example@email.com" />
+      </div>
+      <div class="field col-span-2">
+        <label>Address</label>
+        <input type="text" id="patientAddress" placeholder="Full residential address" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Treatment Details ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-stethoscope"></i> Treatment Details</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Doctor (Staff ID) <span class="req">*</span></label>
+        <select id="doctorID">
+          <option value="">-- Assign Doctor --</option>
+          <option value="STF-00001">STF-00001 – Dr. Lim Wei Jie</option>
+          <option value="STF-00002">STF-00002 – Dr. Siti Aminah</option>
+          <option value="STF-00003">STF-00003 – Dr. Raj Kumar</option>
+          <option value="STF-00004">STF-00004 – Dr. Tan Mei Ling</option>
+          <option value="STF-00005">STF-00005 – Dr. Ahmad Faris</option>
+          <option value="STF-00006">STF-00006 – Dr. Priya Nair</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Consultation Type <span class="req">*</span></label>
+        <select id="consultType" onchange="toggleAdmission()">
+          <option value="">-- Select Type --</option>
+          <option>Initial Visit</option>
+          <option>Follow-Up</option>
+          <option>Emergency</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Treatment Method <span class="req">*</span></label>
+        <select id="treatmentMethod">
+          <option value="">-- Select Method --</option>
+          <option>Medication</option>
+          <option>Surgery</option>
+          <option>Physical Therapy</option>
+          <option>Observation</option>
+          <option>Diagnostic Test</option>
+          <option>Counseling</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Treatment Status <span class="req">*</span></label>
+        <select id="treatmentStatus">
+          <option value="">-- Select Status --</option>
+          <option>Completed</option>
+          <option>In Progress</option>
+          <option>Ordered</option>
+          <option>Refused</option>
+        </select>
+      </div>
+    </div>
+    <div class="field" style="margin-top:8px;">
+      <label>Clinical Notes</label>
+      <textarea id="notes" placeholder="Enter diagnosis, observations, or treatment notes here..."></textarea>
+    </div>
+  </div>
+
+  <!-- ── Admission Details ── -->
+  <div class="card card-admission hidden" id="admissionSection">
+    <div class="card-title"><i class="fas fa-procedures"></i> Admission Details</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Room <span class="req">*</span></label>
+        <select id="roomID">
+          <option value="">-- Select Room --</option>
+          <option value="R101">R101 – General Ward (Floor 1)</option>
+          <option value="R102">R102 – General Ward (Floor 1)</option>
+          <option value="R201">R201 – Private Room (Floor 2)</option>
+          <option value="R202">R202 – Private Room (Floor 2)</option>
+          <option value="R301">R301 – ICU (Floor 3)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Bed ID <span class="req">*</span></label>
+        <input type="text" id="bedID" placeholder="e.g. B01" />
+      </div>
+      <div class="field">
+        <label>Admission Status <span class="req">*</span></label>
+        <select id="admissionStatus">
+          <option value="">-- Select --</option>
+          <option>Active</option>
+          <option>Discharged</option>
+          <option>Transferred</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Admission Date <span class="req">*</span></label>
+        <input type="date" id="admissionDate" />
+      </div>
+      <div class="field">
+        <label>Discharge Date</label>
+        <input type="date" id="dischargeDate" />
+      </div>
+      <div class="field">
+        <label>Admission Reason <span class="req">*</span></label>
+        <input type="text" id="admissionReason" placeholder="e.g. Chest pain, Fracture" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Prescription ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-pills"></i> Prescription</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px;">#</th>
+            <th>Medicine</th>
+            <th style="width:120px;">Dosage</th>
+            <th style="width:130px;">Frequency</th>
+            <th style="width:112px;">Start Date</th>
+            <th style="width:112px;">End Date</th>
+            <th style="width:44px;" class="no-print"></th>
+          </tr>
+        </thead>
+        <tbody id="prescriptionBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7" class="no-print tfoot-add">
+              <button class="btn-add-row" onclick="addPrescriptionRow()">
+                <i class="fas fa-plus"></i> Add Row
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="7" class="tfoot-note">
+              <i class="fas fa-info-circle"></i>
+              All prescriptions are subject to pharmacist verification.
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Payment ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-credit-card"></i> Payment</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Administrator ID <span class="req">*</span></label>
+        <select id="administratorID">
+          <option value="">-- Select Administrator --</option>
+          <option value="STF-00007">STF-00007 – Sarah Lee</option>
+          <option value="STF-00008">STF-00008 – John Tan</option>
+          <option value="STF-00009">STF-00009 – Mary Wong</option>
+          <option value="STF-00010">STF-00010 – David Lim</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Payment Method <span class="req">*</span></label>
+        <select id="payMethod">
+          <option value="">-- Select --</option>
+          <option>Cash</option>
+          <option>TNG (Touch 'n Go)</option>
+          <option>Online Transfer</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Amount (RM) <span class="req">*</span></label>
+        <input type="number" id="payAmount" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Payment Status <span class="req">*</span></label>
+        <select id="payStatus">
+          <option value="">-- Select --</option>
+          <option>Paid</option>
+          <option>Pending</option>
+          <option>Waived</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Action Buttons ── -->
+  <div class="btn-row no-print">
+    <button class="btn btn-primary" onclick="submitForm()">
+      <i class="fas fa-save"></i> Submit Treatment
+    </button>
+    <button class="btn btn-secondary" onclick="clearForm()">
+      <i class="fas fa-eraser"></i> Clear Form
+    </button>
+    <button class="btn btn-danger" onclick="cancelForm()">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button class="btn btn-print" onclick="printReceipt()">
+      <i class="fas fa-print"></i> Print Receipt
+    </button>
+  </div>
+
+</div><!-- end .container -->
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="script.js"></script>
+</body>
+</html>
