@@ -146,7 +146,7 @@ function clearForm() {
 }
 
 function cancelForm() {
-  if (confirm('Cancel and discard all entries?')) window.location.href = 'index.html';
+  if (confirm('Cancel and discard all entries?')) window.location.href = '../index.html';
 }
 
 function dismissBanner() {
