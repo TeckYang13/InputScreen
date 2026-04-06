@@ -51,6 +51,20 @@
     </div>
   </div>
 
+  <!-- ── Consultation Type (filter patients) ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-clipboard-list"></i> Consultation Type</div>
+    <div class="field">
+      <label>Select Consultation Type <span class="req">*</span></label>
+      <select id="consultType" onchange="onConsultTypeChange()">
+        <option value="">-- Select Type --</option>
+        <option value="Appointment">Appointment</option>
+        <option value="Emergency">Emergency</option>
+        <option value="Walk-In">Walk-In</option>
+      </select>
+    </div>
+  </div>
+
   <!-- ── Patient Information ── -->
   <div class="card">
     <div class="card-title"><i class="fas fa-user-injured"></i> Patient Information</div>
@@ -96,15 +110,6 @@
         <label>Doctor (Staff ID) <span class="req">*</span></label>
         <select id="doctorID">
           <option value="">-- Assign Doctor --</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Consultation Type <span class="req">*</span></label>
-        <select id="consultType" onchange="toggleAdmission()">
-          <option value="">-- Select Type --</option>
-          <option>Initial Visit</option>
-          <option>Follow-Up</option>
-          <option>Emergency</option>
         </select>
       </div>
       <div class="field">

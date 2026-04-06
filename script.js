@@ -58,8 +58,8 @@ function initPatients() {
   }
 }
 
-function loadPatientDropdown() {
-  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+function loadPatientDropdown(filteredList) {
+  const patients = filteredList || JSON.parse(localStorage.getItem('patients') || '[]');
   const sel = document.getElementById('patientID');
   sel.innerHTML = '<option value="">-- Select Patient --</option>';
   patients.forEach(p => {
@@ -147,19 +147,45 @@ const freqOptions   = ['Once daily', 'Twice daily', 'Three times daily', 'Every 
 
 
 /* ══════════════════════════════════════
-   ADMISSION SECTION TOGGLE
+   CONSULTATION TYPE – FILTER PATIENTS
 ══════════════════════════════════════ */
-function toggleAdmission() {
-  const type    = document.getElementById('consultType').value;
-  const section = document.getElementById('admissionSection');
-  const showTypes = ['Emergency', 'Inpatient'];
+function onConsultTypeChange() {
+  const type     = document.getElementById('consultType').value;
+  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
 
-  if (showTypes.includes(type)) {
+  // Reset patient selection
+  document.getElementById('patientID').value = '';
+  ['patientName','patientPhone','patientEmail','patientGender','patientDOB','patientAddress']
+    .forEach(f => { document.getElementById(f).value = ''; });
+
+  if (!type) {
+    loadPatientDropdown(); // show all if nothing selected
+    return;
+  }
+
+  // Filter patients who have a booking of the selected type
+  const bookedIDs = bookings.filter(b => b.type === type).map(b => b.patientID);
+  const filtered  = patients.filter(p => bookedIDs.includes(p.id));
+  loadPatientDropdown(filtered);
+
+  clearError('consultType');
+
+  // Show/hide admission section based on Emergency
+  const section = document.getElementById('admissionSection');
+  if (type === 'Emergency') {
     section.classList.remove('hidden');
   } else {
     section.classList.add('hidden');
   }
-  clearError('consultType');
+}
+
+/* ══════════════════════════════════════
+   ADMISSION SECTION TOGGLE
+══════════════════════════════════════ */
+function toggleAdmission() {
+  // No longer used directly (onConsultTypeChange handles admission toggle)
+  // Kept for compatibility
 }
 
 
@@ -339,6 +365,7 @@ function clearForm() {
   });
 
   // Reset dropdowns
+  document.getElementById('consultType').selectedIndex = 0;
   document.getElementById('doctorID').selectedIndex = 0;
   loadPatientDropdown();
 

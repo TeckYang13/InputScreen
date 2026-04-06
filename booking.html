@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Booking – WZY Hospital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Success Banner -->
+<div id="successBanner" class="success-banner hidden">
+  <div class="success-inner">
+    <div class="success-icon-wrap"><i class="fas fa-check-circle"></i></div>
+    <div class="success-text">
+      <strong>Booking Submitted Successfully</strong>
+      <div id="successBookingID" class="success-tid"></div>
+    </div>
+    <button class="dismiss-btn" onclick="dismissBanner()"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="header-brand">
+      <a href="index.html" class="back-btn" title="Back to Dashboard"><i class="fas fa-arrow-left"></i></a>
+      <img src="logo.png" class="header-logo" alt="WZY Hospital Logo" />
+      <div>
+        <h1>WZY Hospital</h1>
+        <p>Management System &nbsp;·&nbsp; Electronic Medical Record</p>
+      </div>
+    </div>
+    <div class="header-badge">Appointment &amp; Emergency Booking</div>
+  </div>
+
+  <!-- ── Info Bar ── -->
+  <div class="info-bar">
+    <div class="info-bar-left">
+      <span class="info-label"><i class="fas fa-calendar-check"></i> Booking ID</span>
+      <span class="tid-badge" id="bookingIDDisplay"></span>
+    </div>
+    <div class="info-bar-right">
+      <span class="info-label"><i class="fas fa-calendar-alt"></i> Today</span>
+      <span class="date-badge" id="displayDate"></span>
+    </div>
+  </div>
+
+  <!-- ── Booking Type ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-tag"></i> Booking Type</div>
+    <div class="booking-type-row">
+      <label class="type-card" id="typeAppointment">
+        <input type="radio" name="bookingType" value="Appointment" onchange="onTypeChange()" />
+        <div class="type-icon blue"><i class="fas fa-calendar-alt"></i></div>
+        <div class="type-label">
+          <strong>Appointment</strong>
+          <span>Schedule a future visit with a doctor</span>
+        </div>
+      </label>
+      <label class="type-card" id="typeEmergency">
+        <input type="radio" name="bookingType" value="Emergency" onchange="onTypeChange()" />
+        <div class="type-icon red"><i class="fas fa-ambulance"></i></div>
+        <div class="type-label">
+          <strong>Emergency</strong>
+          <span>Immediate urgent care — walk in now</span>
+        </div>
+      </label>
+      <label class="type-card" id="typeWalkin">
+        <input type="radio" name="bookingType" value="Walk-In" onchange="onTypeChange()" />
+        <div class="type-icon teal"><i class="fas fa-walking"></i></div>
+        <div class="type-label">
+          <strong>Walk-In</strong>
+          <span>Visit today without a prior appointment</span>
+        </div>
+      </label>
+    </div>
+    <div id="typeError"></div>
+  </div>
+
+  <!-- ── Personal Information ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-user"></i> Personal Information</div>
+    <div class="grid-3">
+      <div class="field col-span-3">
+        <label>Patient ID <span class="req">*</span></label>
+        <select id="patientID" onchange="fillPatientInfo()">
+          <option value="">-- Select Patient --</option>
+        </select>
+      </div>
+      <div class="field col-span-2">
+        <label>Full Name</label>
+        <input type="text" id="patientName" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <input type="text" id="patientGender" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="text" id="patientDOB" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="text" id="patientPhone" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="patientEmail" class="auto-filled" readonly placeholder="Auto-filled" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Appointment Details (shown for Appointment only) ── -->
+  <div class="card hidden" id="appointmentCard">
+    <div class="card-title"><i class="fas fa-clock"></i> Appointment Details</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Preferred Date <span class="req">*</span></label>
+        <input type="text" id="bookingDate" placeholder="DD/MM/YYYY" readonly />
+      </div>
+      <div class="field">
+        <label>Preferred Time <span class="req">*</span></label>
+        <select id="bookingTime">
+          <option value="">-- Select Time --</option>
+          <option>08:00 AM</option>
+          <option>08:30 AM</option>
+          <option>09:00 AM</option>
+          <option>09:30 AM</option>
+          <option>10:00 AM</option>
+          <option>10:30 AM</option>
+          <option>11:00 AM</option>
+          <option>11:30 AM</option>
+          <option>02:00 PM</option>
+          <option>02:30 PM</option>
+          <option>03:00 PM</option>
+          <option>03:30 PM</option>
+          <option>04:00 PM</option>
+          <option>04:30 PM</option>
+        </select>
+      </div>
+      <div class="field col-span-2">
+        <label>Type of Service <span class="req">*</span></label>
+        <select id="apptDept">
+          <option value="">-- Select a service --</option>
+          <option value="DPT-001">Heart &amp; Cardiovascular</option>
+          <option value="DPT-002">Child &amp; Paediatric Care</option>
+          <option value="DPT-004">General Health &amp; Internal Medicine</option>
+          <option value="DPT-005">Pharmacy &amp; Medication</option>
+          <option value="DPT-006">X-ray, MRI &amp; Scans</option>
+          <option value="DPT-007">Bone, Joint &amp; Muscle</option>
+          <option value="DPT-008">Women's Health</option>
+          <option value="DPT-009">Brain &amp; Nerve</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Emergency Details (shown for Emergency only) ── -->
+  <div class="card card-admission hidden" id="emergencyCard">
+    <div class="card-title"><i class="fas fa-ambulance"></i> Emergency Details</div>
+    <div class="field">
+      <label>What is your emergency? <span class="req">*</span></label>
+      <select id="emerDept">
+        <option value="">-- Describe your situation --</option>
+        <option value="DPT-001">Chest Pain / Heart Problem</option>
+        <option value="DPT-004">High Fever / Infection</option>
+        <option value="DPT-007">Fracture / Injury / Fall</option>
+        <option value="DPT-002">Child / Infant Emergency</option>
+        <option value="DPT-008">Pregnancy / Women's Emergency</option>
+        <option value="DPT-009">Stroke / Seizure / Unconscious</option>
+        <option value="DPT-003">Other Urgent Situation</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ── Walk-In Details (shown for Walk-In only) ── -->
+  <div class="card hidden" id="walkinCard">
+    <div class="card-title"><i class="fas fa-walking"></i> Walk-In Details</div>
+    <div class="field">
+      <label>What service do you need? <span class="req">*</span></label>
+      <select id="walkinDept">
+        <option value="">-- Select a service --</option>
+        <option value="DPT-001">Heart &amp; Cardiovascular</option>
+        <option value="DPT-002">Child &amp; Paediatric Care</option>
+        <option value="DPT-004">General Health &amp; Internal Medicine</option>
+        <option value="DPT-005">Pharmacy &amp; Medication</option>
+        <option value="DPT-006">X-ray, MRI &amp; Scans</option>
+        <option value="DPT-007">Bone, Joint &amp; Muscle</option>
+        <option value="DPT-008">Women's Health</option>
+        <option value="DPT-009">Brain &amp; Nerve</option>
+        <option value="DPT-003">Other / General Enquiry</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ── Reason / Symptoms ── -->
+  <div class="card">
+    <div class="card-title"><i class="fas fa-notes-medical"></i> Reason / Symptoms</div>
+    <div class="field">
+      <label>Describe your reason for visit or symptoms <span class="req">*</span></label>
+      <textarea id="bookingReason" placeholder="e.g. Chest pain, fever for 3 days, follow-up for diabetes..." style="min-height:90px;"></textarea>
+    </div>
+  </div>
+
+  <!-- ── Buttons ── -->
+  <div class="btn-row no-print">
+    <button class="btn btn-secondary" onclick="clearForm()">
+      <i class="fas fa-eraser"></i> Clear Form
+    </button>
+    <button class="btn btn-print" onclick="window.print()">
+      <i class="fas fa-print"></i> Print
+    </button>
+    <button class="btn btn-danger" onclick="cancelForm()" style="margin-left:auto;">
+      <i class="fas fa-times"></i> Cancel
+    </button>
+    <button class="btn btn-primary" onclick="submitForm()">
+      <i class="fas fa-calendar-check"></i> Confirm Booking
+    </button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="booking.js"></script>
+</body>
+</html>
