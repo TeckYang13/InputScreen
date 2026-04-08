@@ -40,16 +40,16 @@ initStaff();
    PATIENT DATA (localStorage)
 ══════════════════════════════════════ */
 const samplePatients = [
-  { id:'PAT-2025-001', name:'John Tan Ah Kao',   phone:'012-3456789', email:'john.tan@email.com',   gender:'Male',   dob:'15/05/1985', address:'12, Jalan SS2, Petaling Jaya, 47500, Selangor' },
-  { id:'PAT-2025-002', name:'Siti Aminah Binti Ali', phone:'017-6543210', email:'siti@email.com',   gender:'Female', dob:'10/07/1990', address:'5, Jalan Melati, Taman Melati, 53100, Kuala Lumpur' },
-  { id:'PAT-2025-003', name:'Robert Low',         phone:'011-9988776', email:'rlow@email.com',      gender:'Male',   dob:'22/03/1978', address:'88, Lorong Bukit, Penang, 10050, Penang' },
-  { id:'PAT-2025-004', name:'Priya Kaur',         phone:'014-4433221', email:'priya.k@email.com',   gender:'Female', dob:'30/08/2000', address:'3, Jalan Gasing, PJ, 46000, Selangor' },
-  { id:'PAT-2025-005', name:'David Lim Teck Wee', phone:'018-6655443', email:'davidlim@email.com',  gender:'Male',   dob:'12/12/1965', address:'21, Condo Ria, Subang, 40150, Selangor' },
-  { id:'PAT-2025-006', name:'Mike Wong',          phone:'013-1112223', email:'mike.w@email.com',    gender:'Male',   dob:'05/01/1982', address:'10, Kg Baru, Ampang, 68000, Selangor' },
-  { id:'PAT-2025-007', name:'Nurul Huda',         phone:'013-4445556', email:'nurul.h@email.com',   gender:'Female', dob:'09/07/1995', address:'10, Kg Baru, Selayang, 68100, Selangor' },
-  { id:'PAT-2025-008', name:'Kevin Raj',          phone:'019-7778889', email:'kevin@email.com',     gender:'Male',   dob:'25/03/1982', address:'2, Villa 22, Shah Alam, 40150, Selangor' },
-  { id:'PAT-2025-009', name:'Chong Wei Ling',     phone:'012-5554433', email:'wling@email.com',     gender:'Female', dob:'14/11/1990', address:'Green Lane, Ipoh, 31400, Perak' },
-  { id:'PAT-2025-010', name:'Sarah Jenkins',      phone:'011-3332211', email:'sarah.j@email.com',   gender:'Female', dob:'06/03/1975', address:'9, Residency, Cyberjaya, 63000, Selangor' },
+  { id:'PAT-2025-001', ic:'850515-14-5231', name:'John Tan Ah Kao',        phone:'012-3456789', email:'john.tan@email.com',   gender:'Male',   dob:'15/05/1985', address:'12, Jalan SS2, Petaling Jaya, 47500, Selangor' },
+  { id:'PAT-2025-002', ic:'900710-10-6482', name:'Siti Aminah Binti Ali',  phone:'017-6543210', email:'siti@email.com',        gender:'Female', dob:'10/07/1990', address:'5, Jalan Melati, Taman Melati, 53100, Kuala Lumpur' },
+  { id:'PAT-2025-003', ic:'780322-07-3341', name:'Robert Low',              phone:'011-9988776', email:'rlow@email.com',        gender:'Male',   dob:'22/03/1978', address:'88, Lorong Bukit, Penang, 10050, Penang' },
+  { id:'PAT-2025-004', ic:'000830-14-7823', name:'Priya Kaur',              phone:'014-4433221', email:'priya.k@email.com',     gender:'Female', dob:'30/08/2000', address:'3, Jalan Gasing, PJ, 46000, Selangor' },
+  { id:'PAT-2025-005', ic:'651212-10-4412', name:'David Lim Teck Wee',     phone:'018-6655443', email:'davidlim@email.com',    gender:'Male',   dob:'12/12/1965', address:'21, Condo Ria, Subang, 40150, Selangor' },
+  { id:'PAT-2025-006', ic:'820105-14-2293', name:'Mike Wong',               phone:'013-1112223', email:'mike.w@email.com',      gender:'Male',   dob:'05/01/1982', address:'10, Kg Baru, Ampang, 68000, Selangor' },
+  { id:'PAT-2025-007', ic:'950709-10-8834', name:'Nurul Huda',              phone:'013-4445556', email:'nurul.h@email.com',     gender:'Female', dob:'09/07/1995', address:'10, Kg Baru, Selayang, 68100, Selangor' },
+  { id:'PAT-2025-008', ic:'820325-14-5567', name:'Kevin Raj',               phone:'019-7778889', email:'kevin@email.com',       gender:'Male',   dob:'25/03/1982', address:'2, Villa 22, Shah Alam, 40150, Selangor' },
+  { id:'PAT-2025-009', ic:'901114-08-3312', name:'Chong Wei Ling',          phone:'012-5554433', email:'wling@email.com',       gender:'Female', dob:'14/11/1990', address:'Green Lane, Ipoh, 31400, Perak' },
+  { id:'PAT-2025-010', ic:'750306-14-6601', name:'Sarah Jenkins',           phone:'011-3332211', email:'sarah.j@email.com',     gender:'Female', dob:'06/03/1975', address:'9, Residency, Cyberjaya, 63000, Selangor' },
 ];
 
 function initPatients() {
@@ -159,6 +159,104 @@ document.getElementById('treatmentID').textContent = currentTreatmentID;
 loadPatientDropdown();
 loadStaffDropdown('doctorID', 'Doctor');
 loadStaffDropdown('administratorID', 'Administrator');
+loadRoomDropdown();
+
+/* ══════════════════════════════════════
+   ROOM & BED DROPDOWNS (Admission)
+══════════════════════════════════════ */
+const defaultRooms = [
+  {
+    id:'R101', floor:1, type:'General Ward', dailyRate:100,
+    beds:[
+      { bedID:'B01', status:'Occupied',    patientID:'PAT-2025-001', admissionDate:'01/04/2026' },
+      { bedID:'B02', status:'Available' },
+      { bedID:'B03', status:'Available' },
+      { bedID:'B04', status:'Occupied',    patientID:'PAT-2025-003', admissionDate:'06/04/2026' },
+    ]
+  },
+  {
+    id:'R102', floor:1, type:'General Ward', dailyRate:100,
+    beds:[
+      { bedID:'B01', status:'Available' },
+      { bedID:'B02', status:'Maintenance' },
+      { bedID:'B03', status:'Available' },
+      { bedID:'B04', status:'Available' },
+    ]
+  },
+  {
+    id:'R201', floor:2, type:'Private Room', dailyRate:250,
+    beds:[
+      { bedID:'B01', status:'Occupied', patientID:'PAT-2025-006', admissionDate:'05/04/2026' },
+    ]
+  },
+  {
+    id:'R202', floor:2, type:'Private Room', dailyRate:250,
+    beds:[
+      { bedID:'B01', status:'Available' },
+    ]
+  },
+  {
+    id:'R301', floor:3, type:'ICU', dailyRate:500,
+    beds:[
+      { bedID:'B01', status:'Occupied',    patientID:'PAT-2025-005', admissionDate:'03/04/2026' },
+      { bedID:'B02', status:'Occupied',    patientID:'PAT-2025-008', admissionDate:'07/04/2026' },
+      { bedID:'B03', status:'Maintenance' },
+      { bedID:'B04', status:'Available' },
+      { bedID:'B05', status:'Available' },
+      { bedID:'B06', status:'Available' },
+    ]
+  },
+];
+
+function initRoomsData() {
+  if (!localStorage.getItem('rooms')) {
+    localStorage.setItem('rooms', JSON.stringify(defaultRooms));
+  }
+}
+
+function getRoomsData() {
+  return JSON.parse(localStorage.getItem('rooms') || '[]');
+}
+
+initRoomsData();
+
+function loadRoomDropdown() {
+  const rooms = getRoomsData();
+  const sel   = document.getElementById('roomID');
+  sel.innerHTML = '<option value="">-- Select Room --</option>';
+  rooms.forEach(r => {
+    const availCount = r.beds.filter(b => b.status === 'Available').length;
+    if (availCount === 0) return;
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = `${r.id} – ${r.type} (Floor ${r.floor}) · ${availCount} bed${availCount !== 1 ? 's' : ''} available`;
+    sel.appendChild(opt);
+  });
+}
+
+function loadAvailableBeds() {
+  const roomID = document.getElementById('roomID').value;
+  const bedSel = document.getElementById('bedID');
+  clearError('roomID');
+
+  if (!roomID) {
+    bedSel.innerHTML = '<option value="">-- Select Room First --</option>';
+    recalcPayment();
+    return;
+  }
+
+  const room      = getRoomsData().find(r => r.id === roomID);
+  const availBeds = room ? room.beds.filter(b => b.status === 'Available') : [];
+
+  if (availBeds.length === 0) {
+    bedSel.innerHTML = '<option value="">No available beds in this room</option>';
+  } else {
+    bedSel.innerHTML = '<option value="">-- Select Bed --</option>' +
+      availBeds.map(b => `<option value="${b.bedID}">${b.bedID}</option>`).join('');
+  }
+
+  recalcPayment();
+}
 
 
 /* ══════════════════════════════════════
@@ -166,15 +264,23 @@ loadStaffDropdown('administratorID', 'Administrator');
 ══════════════════════════════════════ */
 
 const medicines = [
-  { id: 'M001', name: 'Paracetamol 500mg' },
-  { id: 'M002', name: 'Amoxicillin 250mg' },
-  { id: 'M003', name: 'Ibuprofen 400mg' },
-  { id: 'M004', name: 'Metformin 500mg' },
-  { id: 'M005', name: 'Atorvastatin 20mg' },
-  { id: 'M006', name: 'Omeprazole 20mg' },
+  { id: 'M001', name: 'Paracetamol 500mg',  price: 5  },
+  { id: 'M002', name: 'Amoxicillin 250mg',  price: 15 },
+  { id: 'M003', name: 'Ibuprofen 400mg',    price: 8  },
+  { id: 'M004', name: 'Metformin 500mg',    price: 12 },
+  { id: 'M005', name: 'Atorvastatin 20mg',  price: 25 },
+  { id: 'M006', name: 'Omeprazole 20mg',    price: 18 },
 ];
 
-const dosageOptions = ['100mg', '250mg', '500mg', '1g', '5ml', '10ml', '15ml'];
+const dosageOptions = [
+  { label: '100mg', price: 2  },
+  { label: '250mg', price: 5  },
+  { label: '500mg', price: 8  },
+  { label: '1g',    price: 12 },
+  { label: '5ml',   price: 4  },
+  { label: '10ml',  price: 7  },
+  { label: '15ml',  price: 10 },
+];
 const freqOptions   = ['Once daily', 'Twice daily', 'Three times daily', 'Every 8 hours', 'Every 6 hours', 'As needed'];
 
 
@@ -204,21 +310,20 @@ function onConsultTypeChange() {
 
   clearError('consultType');
 
-  // Show/hide admission section based on Emergency
-  const section = document.getElementById('admissionSection');
-  if (type === 'Emergency') {
-    section.classList.remove('hidden');
-  } else {
-    section.classList.add('hidden');
-  }
+  // Show the admission toggle row; auto-check for Emergency
+  document.getElementById('admToggleRow').classList.remove('hidden');
+  const cb = document.getElementById('requiresAdmission');
+  cb.checked = (type === 'Emergency');
+  toggleAdmission();
 }
 
 /* ══════════════════════════════════════
    ADMISSION SECTION TOGGLE
 ══════════════════════════════════════ */
 function toggleAdmission() {
-  // No longer used directly (onConsultTypeChange handles admission toggle)
-  // Kept for compatibility
+  const checked = document.getElementById('requiresAdmission').checked;
+  document.getElementById('admissionSection').classList.toggle('hidden', !checked);
+  recalcPayment();
 }
 
 
@@ -229,7 +334,7 @@ let rowCounter = 0;
 
 function buildRowHTML(num) {
   const medOptions  = medicines.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
-  const dosOpts     = dosageOptions.map(d => `<option>${d}</option>`).join('');
+  const dosOpts     = dosageOptions.map(d => `<option value="${d.label}">${d.label}</option>`).join('');
   const freqOpts    = freqOptions.map(f => `<option>${f}</option>`).join('');
   const todayVal    = `${today.getFullYear()}-${fmt(today.getMonth() + 1)}-${fmt(today.getDate())}`;
 
@@ -274,6 +379,7 @@ function removeRow(btn) {
   if (rows.length <= 1) return; // keep at least 1 row
   btn.closest('tr').remove();
   renumberRows();
+  recalcPayment();
 }
 
 function renumberRows() {
@@ -284,6 +390,112 @@ function renumberRows() {
 
 // Init with 4 rows
 for (let i = 0; i < 4; i++) addPrescriptionRow();
+
+
+/* ══════════════════════════════════════
+   PAYMENT AUTO CALCULATION
+══════════════════════════════════════ */
+const PRICING = {
+  consultation: { 'Appointment': 50, 'Walk-In': 80, 'Emergency': 150 },
+  treatment:    { 'Medication': 30, 'Surgery': 500, 'Physical Therapy': 80, 'Observation': 50, 'Diagnostic Test': 120, 'Counseling': 60 },
+  room: { 'R101': 100, 'R102': 100, 'R201': 250, 'R202': 250, 'R301': 500 },
+};
+
+function parseDMY(str) {
+  // Accepts dd/mm/yyyy or yyyy-mm-dd
+  if (!str) return null;
+  if (str.includes('-')) {
+    const [y, m, d] = str.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  }
+  const [d, m, y] = str.split('/').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function recalcPayment() {
+  const consultType  = document.getElementById('consultType').value;
+  const treatMethod  = document.getElementById('treatmentMethod').value;
+  const roomID       = document.getElementById('roomID').value;
+  const admDate      = document.getElementById('admissionDate').value;
+  const disDate      = document.getElementById('dischargeDate').value;
+  const isAdmission  = !document.getElementById('admissionSection').classList.contains('hidden');
+
+  const items = [];
+
+  // 1. Consultation fee
+  if (consultType && PRICING.consultation[consultType] !== undefined) {
+    items.push({ label: `Consultation (${consultType})`, amount: PRICING.consultation[consultType] });
+  }
+
+  // 2. Treatment method fee
+  if (treatMethod && PRICING.treatment[treatMethod] !== undefined) {
+    items.push({ label: `Treatment – ${treatMethod}`, amount: PRICING.treatment[treatMethod] });
+  }
+
+  // 3. Medicine rows – per medicine + per dosage pricing
+  document.querySelectorAll('#prescriptionBody tr').forEach(tr => {
+    const medSel    = tr.querySelector('td:nth-child(2) select');
+    const dosageSel = tr.querySelector('td:nth-child(3) select');
+    if (!medSel || !medSel.value) return;
+    const med    = medicines.find(m => m.id === medSel.value);
+    const dosage = dosageOptions.find(d => d.label === dosageSel.value);
+    if (!med) return;
+    const rowTotal = med.price + (dosage ? dosage.price : 0);
+    const dosageNote = dosage ? ` · ${dosage.label}` : '';
+    items.push({ label: `${med.name}${dosageNote}`, amount: rowTotal });
+  });
+
+  // 4. Room / admission fee
+  if (isAdmission && roomID && PRICING.room[roomID] !== undefined) {
+    let days = 1;
+    const d1 = parseDMY(admDate);
+    const d2 = parseDMY(disDate);
+    if (d1 && d2 && d2 > d1) {
+      days = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+    }
+    const roomLabel = document.getElementById('roomID').options[document.getElementById('roomID').selectedIndex].text.split('–')[0].trim();
+    items.push({ label: `Room ${roomLabel} × ${days} day${days > 1 ? 's' : ''} (RM ${PRICING.room[roomID]}/day)`, amount: days * PRICING.room[roomID] });
+  }
+
+  const total = items.reduce((s, i) => s + i.amount, 0);
+
+  // Render breakdown
+  const breakdownEl = document.getElementById('costBreakdown');
+  const rowsEl      = document.getElementById('breakdownRows');
+  const totalEl     = document.getElementById('breakdownTotal');
+
+  if (items.length === 0) {
+    breakdownEl.classList.add('hidden');
+    document.getElementById('payAmount').value = '';
+    return;
+  }
+
+  breakdownEl.classList.remove('hidden');
+  rowsEl.innerHTML = items.map(i =>
+    `<div class="breakdown-row"><span class="row-label">${i.label}</span><span class="row-val">RM ${i.amount.toFixed(2)}</span></div>`
+  ).join('');
+  totalEl.textContent = `RM ${total.toFixed(2)}`;
+
+  // Auto-fill the amount field
+  document.getElementById('payAmount').value = total.toFixed(2);
+  clearError('payAmount');
+}
+
+// Attach recalc listeners
+['consultType','treatmentMethod','roomID','admissionDate','dischargeDate'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('change', recalcPayment);
+    el.addEventListener('input',  recalcPayment);
+  }
+});
+
+// Watch prescription medicine selects (delegated — handles dynamic rows)
+document.getElementById('prescriptionBody').addEventListener('change', function(e) {
+  if (e.target.tagName === 'SELECT' && e.target.closest('td:nth-child(2)')) recalcPayment();
+  // Also recalc when any medicine cell changes (simpler: just recalc on any select change inside tbody)
+  recalcPayment();
+});
 
 
 /* ══════════════════════════════════════
@@ -344,10 +556,8 @@ function submitForm() {
   ];
 
   if (isAdmission) {
+    // Only date and reason are required; room/bed are optional preferences
     requiredFields.push(
-      { id: 'roomID',          label: 'Room' },
-      { id: 'bedID',           label: 'Bed ID' },
-      { id: 'admissionStatus', label: 'Admission Status' },
       { id: 'admissionDate',   label: 'Admission Date' },
       { id: 'admissionReason', label: 'Admission Reason' },
     );
@@ -369,6 +579,27 @@ function submitForm() {
     const firstError = document.querySelector('.has-error');
     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
+  }
+
+  // Save pending admission request if applicable
+  if (isAdmission) {
+    const patID    = document.getElementById('patientID').value;
+    const admDate  = document.getElementById('admissionDate').value;
+    const reason   = document.getElementById('admissionReason').value;
+    const roomPref = document.getElementById('roomID').value || null;
+    const bedPref  = document.getElementById('bedID').value  || null;
+
+    const pending  = JSON.parse(localStorage.getItem('pendingAdmissions') || '[]');
+    const filtered = pending.filter(p => p.patientID !== patID); // replace if exists
+    filtered.push({
+      patientID:      patID,
+      treatmentID:    currentTreatmentID,
+      admissionDate:  admDate,
+      admissionReason: reason,
+      preferredRoomID: roomPref,
+      preferredBedID:  bedPref,
+    });
+    localStorage.setItem('pendingAdmissions', JSON.stringify(filtered));
   }
 
   // Show success banner with the submitted ID
@@ -402,8 +633,18 @@ function clearForm() {
   document.getElementById('doctorID').selectedIndex = 0;
   loadPatientDropdown();
 
-  // Hide admission section
+  // Hide admission toggle and section
+  document.getElementById('admToggleRow').classList.add('hidden');
+  document.getElementById('requiresAdmission').checked = false;
   document.getElementById('admissionSection').classList.add('hidden');
+
+  // Reset room/bed dropdowns
+  loadRoomDropdown();
+  document.getElementById('bedID').innerHTML = '<option value="">-- Select Room First --</option>';
+
+  // Hide cost breakdown
+  document.getElementById('costBreakdown').classList.add('hidden');
+  document.getElementById('payAmount').value = '';
 
   // Clear all error states
   document.querySelectorAll('.has-error').forEach(f => f.classList.remove('has-error'));

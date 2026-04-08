@@ -54,12 +54,21 @@ document.querySelectorAll('input, select').forEach(el => {
   el.addEventListener('change', () => { if (el.id) clearError(el.id); });
 });
 
+/* ── IC auto-format: YYMMDD-PB-XXXX ── */
+document.getElementById('patientIC').addEventListener('input', function () {
+  let val = this.value.replace(/\D/g, ''); // digits only
+  if (val.length > 6)  val = val.slice(0, 6) + '-' + val.slice(6);
+  if (val.length > 9)  val = val.slice(0, 9) + '-' + val.slice(9);
+  this.value = val;
+});
+
 /* ══════════════════════════════════════
    SUBMIT
 ══════════════════════════════════════ */
 function submitForm() {
   const required = [
     { id: 'patientName',   label: 'Full Name' },
+    { id: 'patientIC',     label: 'IC Number' },
     { id: 'patientGender', label: 'Gender' },
     { id: 'patientDOB',    label: 'Date of Birth' },
     { id: 'patientPhone',  label: 'Phone' },
@@ -71,6 +80,8 @@ function submitForm() {
   ];
 
   let hasError = false;
+
+  // 1. Required check
   required.forEach(f => {
     const el = document.getElementById(f.id);
     if (!el.value.trim()) {
@@ -81,6 +92,57 @@ function submitForm() {
     }
   });
 
+  // 2. Full Name – letters, spaces, hyphens, slashes only; min 2 chars
+  const nameVal = document.getElementById('patientName').value.trim();
+  if (nameVal && (nameVal.length < 2 || !/^[a-zA-Z\s\-\/'\.]+$/.test(nameVal))) {
+    setError('patientName', 'Name must contain letters only (min 2 characters).');
+    hasError = true;
+  }
+
+  // 3. IC – format YYMMDD-PB-XXXX + uniqueness
+  const icVal = document.getElementById('patientIC').value.replace(/-/g, '');
+  if (icVal) {
+    if (icVal.length !== 12 || !/^\d{12}$/.test(icVal)) {
+      setError('patientIC', 'IC must be 12 digits (format: YYMMDD-PB-XXXX).');
+      hasError = true;
+    } else {
+      const icFormatted = `${icVal.slice(0,6)}-${icVal.slice(6,8)}-${icVal.slice(8)}`;
+      const existing    = JSON.parse(localStorage.getItem('patients') || '[]');
+      if (existing.some(p => p.ic === icFormatted)) {
+        setError('patientIC', 'This IC number is already registered.');
+        hasError = true;
+      }
+    }
+  }
+
+  // 4. Phone – Malaysian format: 01X-XXXXXXX / 01X-XXXXXXXX / 0X-XXXXXXXX
+  const phoneVal = document.getElementById('patientPhone').value.trim();
+  if (phoneVal && !/^(01[0-9]-\d{7,8}|0[2-9]-\d{7,8})$/.test(phoneVal)) {
+    setError('patientPhone', 'Enter a valid Malaysian phone (e.g. 012-3456789 or 03-12345678).');
+    hasError = true;
+  }
+
+  // 5. Email – basic format
+  const emailVal = document.getElementById('patientEmail').value.trim();
+  if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    setError('patientEmail', 'Enter a valid email address.');
+    hasError = true;
+  }
+
+  // 6. Postcode – exactly 5 digits
+  const postcodeVal = document.getElementById('postcode').value.trim();
+  if (postcodeVal && !/^\d{5}$/.test(postcodeVal)) {
+    setError('postcode', 'Postcode must be exactly 5 digits.');
+    hasError = true;
+  }
+
+  // 7. City – letters only
+  const cityVal = document.getElementById('city').value.trim();
+  if (cityVal && !/^[a-zA-Z\s\-\.]+$/.test(cityVal)) {
+    setError('city', 'City name must contain letters only.');
+    hasError = true;
+  }
+
   if (hasError) {
     const firstError = document.querySelector('.has-error');
     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -89,9 +151,12 @@ function submitForm() {
 
   // Save to localStorage
   const address  = `${document.getElementById('streetAddress').value}, ${document.getElementById('city').value}, ${document.getElementById('postcode').value}, ${document.getElementById('state').value}`;
+  const icRaw    = document.getElementById('patientIC').value.replace(/-/g, '');
+  const icFormatted = `${icRaw.slice(0,6)}-${icRaw.slice(6,8)}-${icRaw.slice(8)}`;
   const patients = JSON.parse(localStorage.getItem('patients') || '[]');
   patients.push({
     id:      currentPatientID,
+    ic:      icFormatted,
     name:    document.getElementById('patientName').value,
     phone:   document.getElementById('patientPhone').value,
     email:   document.getElementById('patientEmail').value,

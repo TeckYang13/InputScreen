@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WZY Hospital – Room & Bed Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<div class="container container-wide">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-brand">
+      <a href="../index.html" class="back-btn" title="Back to Dashboard"><i class="fas fa-arrow-left"></i></a>
+      <img src="../logo.png" class="header-logo" alt="WZY Hospital Logo" />
+      <div>
+        <h1>WZY Hospital</h1>
+        <p>Management System &nbsp;·&nbsp; Room &amp; Bed Management</p>
+      </div>
+    </div>
+    <div class="header-badge">Room Management</div>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="room-action-bar">
+    <div class="room-search-wrap">
+      <i class="fas fa-search room-search-icon"></i>
+      <input type="text" id="roomSearch" class="room-search-input" placeholder="Search by room ID or type…" oninput="renderRoomGrid()" />
+      <button class="room-search-clear" id="searchClearBtn" onclick="clearSearch()" title="Clear search"><i class="fas fa-times"></i></button>
+    </div>
+    <button class="room-search-btn" onclick="renderRoomGrid()" title="Search">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="room-stats">
+    <div class="stat-card stat-total">
+      <div class="stat-icon"><i class="fas fa-door-open"></i></div>
+      <div class="stat-body">
+        <div class="stat-val" id="statRooms">0</div>
+        <div class="stat-label">Total Rooms</div>
+      </div>
+    </div>
+    <div class="stat-card stat-beds">
+      <div class="stat-icon"><i class="fas fa-bed"></i></div>
+      <div class="stat-body">
+        <div class="stat-val" id="statBeds">0</div>
+        <div class="stat-label">Total Beds</div>
+      </div>
+    </div>
+    <div class="stat-card stat-occupied">
+      <div class="stat-icon"><i class="fas fa-user-injured"></i></div>
+      <div class="stat-body">
+        <div class="stat-val" id="statOccupied">0</div>
+        <div class="stat-label">Occupied</div>
+      </div>
+    </div>
+    <div class="stat-card stat-available">
+      <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-body">
+        <div class="stat-val" id="statAvailable">0</div>
+        <div class="stat-label">Available</div>
+      </div>
+    </div>
+    <div class="stat-card stat-maintenance">
+      <div class="stat-icon"><i class="fas fa-tools"></i></div>
+      <div class="stat-body">
+        <div class="stat-val" id="statMaintenance">0</div>
+        <div class="stat-label">Maintenance</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floor Tabs + Legend -->
+  <div class="floor-tab-bar">
+    <div class="floor-tabs">
+      <button class="floor-tab active" onclick="switchFloor(0, this)"><i class="fas fa-th"></i> All Floors</button>
+      <button class="floor-tab" onclick="switchFloor(1, this)"><i class="fas fa-building"></i> Floor 1</button>
+      <button class="floor-tab" onclick="switchFloor(2, this)"><i class="fas fa-building"></i> Floor 2</button>
+      <button class="floor-tab" onclick="switchFloor(3, this)"><i class="fas fa-building"></i> Floor 3</button>
+    </div>
+    <div class="legend-add-row">
+      <div class="bed-legend">
+        <span class="legend-item"><span class="legend-dot ld-available"></span> Available</span>
+        <span class="legend-item"><span class="legend-dot ld-occupied"></span> Occupied</span>
+        <span class="legend-item"><span class="legend-dot ld-maintenance"></span> Maintenance</span>
+      </div>
+      <button class="btn-add-room" onclick="openRoomModal(null)">
+        <i class="fas fa-plus"></i> Add Room
+      </button>
+    </div>
+  </div>
+
+  <!-- Room Grid -->
+  <div id="roomGrid" class="room-grid"></div>
+
+</div><!-- end .container -->
+
+
+<!-- ══════════ BED DETAIL MODAL ══════════ -->
+<div id="bedModal" class="modal-overlay hidden" onclick="closeBedModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle">Bed Detail</div>
+        <div class="modal-sub"   id="modalSub"></div>
+      </div>
+      <button class="modal-close-btn" onclick="closeBedModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+
+<!-- ══════════ ADD / EDIT ROOM MODAL ══════════ -->
+<div id="roomModal" class="modal-overlay hidden" onclick="closeRoomModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="roomModalTitle">Add New Room</div>
+        <div class="modal-sub">Fill in the room details below</div>
+      </div>
+      <button class="modal-close-btn" onclick="closeRoomModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2" style="gap:12px;">
+        <div class="field">
+          <label>Room ID <span class="req">*</span></label>
+          <input type="text" id="rmID" placeholder="e.g. R401" />
+        </div>
+        <div class="field">
+          <label>Floor <span class="req">*</span></label>
+          <select id="rmFloor">
+            <option value="">-- Select Floor --</option>
+            <option value="1">Floor 1</option>
+            <option value="2">Floor 2</option>
+            <option value="3">Floor 3</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Room Type <span class="req">*</span></label>
+          <select id="rmType" onchange="autoFillRate()">
+            <option value="">-- Select Type --</option>
+            <option>General Ward</option>
+            <option>Private Room</option>
+            <option>ICU</option>
+            <option>Paediatric Ward</option>
+            <option>Maternity Ward</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Daily Rate (RM) <span class="req">*</span></label>
+          <input type="number" id="rmRate" placeholder="Auto-filled by type" min="0" step="0.01" readonly class="auto-filled" />
+        </div>
+        <div class="field" id="rmBedsField" style="grid-column:span 2;">
+          <label>Number of Beds <span class="req">*</span></label>
+          <input type="number" id="rmBeds" placeholder="e.g. 4" min="1" max="20" />
+          <span id="rmBedsNote" style="font-size:0.75rem;color:var(--gray-500);margin-top:4px;display:block;">
+            <i class="fas fa-info-circle"></i> All beds will be initialised as Available.
+          </span>
+        </div>
+      </div>
+      <div id="roomFormError" class="room-form-error hidden"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary" onclick="closeRoomModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveRoomBtn" onclick="saveRoom()"><i class="fas fa-save"></i> Save Room</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/room.js"></script>
+</body>
+</html>
