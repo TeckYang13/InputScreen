@@ -299,6 +299,7 @@ body {
   background: var(--gray-50);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+   text-overflow: ellipsis;
 }
 .field input:hover,
 .field select:hover { border-color: var(--blue-500); }
