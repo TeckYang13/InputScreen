@@ -11,12 +11,12 @@ function formatBookingID(counter) {
   return `APT-${datePart}-${counter.toString().padStart(3, '0')}`;
 }
 
-let currentCounter  = parseInt(localStorage.getItem('bookingCounter') || '1');
+let currentCounter  = 1;
 let currentBookingID = formatBookingID(currentCounter);
-document.getElementById('bookingIDDisplay').textContent = currentBookingID;
+let allPatients      = [];
 
 /* ══════════════════════════════════════
-   FLATPICKR – APPOINTMENT DATE
+   FLATPICKR
 ══════════════════════════════════════ */
 flatpickr('#patientDOB', {
   dateFormat: 'd/m/Y',
@@ -34,10 +34,9 @@ flatpickr('#bookingDate', {
    PATIENT DROPDOWN & AUTOFILL
 ══════════════════════════════════════ */
 function loadPatientDropdown() {
-  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
   const sel = document.getElementById('patientID');
   sel.innerHTML = '<option value="">-- Select Patient --</option>';
-  patients.forEach(p => {
+  allPatients.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.id;
     opt.textContent = `${p.id} – ${p.name}`;
@@ -46,10 +45,9 @@ function loadPatientDropdown() {
 }
 
 function fillPatientInfo() {
-  const id       = document.getElementById('patientID').value;
-  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
-  const patient  = patients.find(p => p.id === id);
-  const fields   = ['patientName','patientPhone','patientEmail','patientGender','patientDOB'];
+  const id      = document.getElementById('patientID').value;
+  const patient = allPatients.find(p => p.id === id);
+  const fields  = ['patientName','patientPhone','patientEmail','patientGender','patientDOB'];
   if (patient) {
     document.getElementById('patientName').value   = patient.name;
     document.getElementById('patientPhone').value  = patient.phone;
@@ -62,8 +60,6 @@ function fillPatientInfo() {
   clearError('patientID');
 }
 
-loadPatientDropdown();
-
 /* ══════════════════════════════════════
    BOOKING TYPE TOGGLE
 ══════════════════════════════════════ */
@@ -73,8 +69,8 @@ function onTypeChange() {
   const emerCard   = document.getElementById('typeEmergency');
   const walkinCard = document.getElementById('typeWalkin');
 
-  apptCard.classList.toggle('type-selected-blue', type === 'Appointment');
-  emerCard.classList.toggle('type-selected-red',  type === 'Emergency');
+  apptCard.classList.toggle('type-selected-blue',  type === 'Appointment');
+  emerCard.classList.toggle('type-selected-red',   type === 'Emergency');
   walkinCard.classList.toggle('type-selected-teal', type === 'Walk-In');
 
   document.getElementById('appointmentCard').classList.toggle('hidden', type !== 'Appointment');
@@ -86,12 +82,8 @@ function onTypeChange() {
     document.getElementById('bookingTime').value = '';
     document.getElementById('apptDept').value    = '';
   }
-  if (type !== 'Emergency') {
-    document.getElementById('emerDept').value = '';
-  }
-  if (type !== 'Walk-In') {
-    document.getElementById('walkinDept').value = '';
-  }
+  if (type !== 'Emergency') document.getElementById('emerDept').value   = '';
+  if (type !== 'Walk-In')   document.getElementById('walkinDept').value = '';
 
   document.getElementById('typeError').innerHTML = '';
 }
@@ -132,7 +124,7 @@ document.querySelectorAll('input, select, textarea').forEach(el => {
 /* ══════════════════════════════════════
    SUBMIT
 ══════════════════════════════════════ */
-function submitForm() {
+async function submitForm() {
   const bookingType = document.querySelector('input[name="bookingType"]:checked')?.value;
 
   if (!bookingType) {
@@ -148,7 +140,6 @@ function submitForm() {
     { id: 'patientID',     label: 'Patient ID' },
     { id: 'bookingReason', label: 'Reason / Symptoms' },
   ];
-
   if (bookingType === 'Appointment') {
     required.push(
       { id: 'bookingDate', label: 'Preferred Date' },
@@ -156,12 +147,8 @@ function submitForm() {
       { id: 'apptDept',   label: 'Department / Specialty' },
     );
   }
-  if (bookingType === 'Emergency') {
-    required.push({ id: 'emerDept', label: 'Type of Emergency' });
-  }
-  if (bookingType === 'Walk-In') {
-    required.push({ id: 'walkinDept', label: 'Service / Department' });
-  }
+  if (bookingType === 'Emergency') required.push({ id: 'emerDept',   label: 'Type of Emergency' });
+  if (bookingType === 'Walk-In')   required.push({ id: 'walkinDept', label: 'Service / Department' });
 
   let hasError = false;
   required.forEach(f => {
@@ -180,44 +167,50 @@ function submitForm() {
     return;
   }
 
-  // Success
-  const name = document.getElementById('patientName').value;
-  const patientID = document.getElementById('patientID').value;
-  let dateInfo = '';
-  if (bookingType === 'Appointment') {
-    dateInfo = ` on ${document.getElementById('bookingDate').value} at ${document.getElementById('bookingTime').value}`;
-  } else if (bookingType === 'Emergency') {
-    dateInfo = ' – Emergency (Today)';
-  } else {
-    dateInfo = ' – Walk-In (Today)';
+  showLoading();
+  try {
+    const name      = document.getElementById('patientName').value;
+    const patientID = document.getElementById('patientID').value;
+    let dateInfo    = '';
+    if (bookingType === 'Appointment') {
+      dateInfo = ` on ${document.getElementById('bookingDate').value} at ${document.getElementById('bookingTime').value}`;
+    } else if (bookingType === 'Emergency') {
+      dateInfo = ' – Emergency (Today)';
+    } else {
+      dateInfo = ' – Walk-In (Today)';
+    }
+
+    const booking = {
+      id:        currentBookingID,
+      patientID: patientID,
+      type:      bookingType,
+      date:      bookingType === 'Appointment' ? document.getElementById('bookingDate').value : dateStr,
+      time:      bookingType === 'Appointment' ? document.getElementById('bookingTime').value : '',
+      dept:      bookingType === 'Appointment' ? document.getElementById('apptDept').value
+                 : bookingType === 'Emergency' ? document.getElementById('emerDept').value
+                 : document.getElementById('walkinDept').value,
+      reason:    document.getElementById('bookingReason').value,
+    };
+
+    await dbSaveBooking(booking);
+    await dbIncrementCounter('bookingCounter');
+
+    document.getElementById('successBookingID').textContent =
+      `Booking ID: ${currentBookingID} – ${bookingType} for ${name}${dateInfo}`;
+    document.getElementById('successBanner').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    currentCounter++;
+    currentBookingID = formatBookingID(currentCounter);
+    document.getElementById('bookingIDDisplay').textContent = currentBookingID;
+
+    clearForm();
+  } catch (e) {
+    alert('Failed to save booking. Please check your connection and try again.');
+    console.error(e);
+  } finally {
+    hideLoading();
   }
-  document.getElementById('successBookingID').textContent =
-    `Booking ID: ${currentBookingID} – ${bookingType} for ${name}${dateInfo}`;
-  document.getElementById('successBanner').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // Save booking to localStorage
-  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-  bookings.push({
-    id:        currentBookingID,
-    patientID: patientID,
-    type:      bookingType,
-    date:      bookingType === 'Appointment' ? document.getElementById('bookingDate').value : dateStr,
-    time:      bookingType === 'Appointment' ? document.getElementById('bookingTime').value : '',
-    dept:      bookingType === 'Appointment' ? document.getElementById('apptDept').value
-               : bookingType === 'Emergency' ? document.getElementById('emerDept').value
-               : bookingType === 'Walk-In'   ? document.getElementById('walkinDept').value : '',
-    reason:    document.getElementById('bookingReason').value,
-  });
-  localStorage.setItem('bookings', JSON.stringify(bookings));
-
-  // Advance counter
-  localStorage.setItem('bookingCounter', currentCounter + 1);
-  currentCounter++;
-  currentBookingID = formatBookingID(currentCounter);
-  document.getElementById('bookingIDDisplay').textContent = currentBookingID;
-
-  clearForm();
 }
 
 /* ══════════════════════════════════════
@@ -229,12 +222,12 @@ function clearForm() {
   document.querySelectorAll('.has-error').forEach(f => f.classList.remove('has-error'));
   document.querySelectorAll('.error-msg').forEach(e => e.textContent = '');
   document.getElementById('typeError').innerHTML = '';
-  document.getElementById('typeAppointment').classList.remove('type-selected-blue');
-  document.getElementById('typeEmergency').classList.remove('type-selected-red');
-  document.getElementById('typeWalkin').classList.remove('type-selected-teal');
-  document.getElementById('walkinCard').classList.add('hidden');
-  document.getElementById('appointmentCard').classList.add('hidden');
-  document.getElementById('emergencyCard').classList.add('hidden');
+  ['typeAppointment','typeEmergency','typeWalkin'].forEach(id => {
+    document.getElementById(id).className = document.getElementById(id).className
+      .replace(/type-selected-\w+/g, '').trim();
+  });
+  ['appointmentCard','emergencyCard','walkinCard'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
   loadPatientDropdown();
 }
 
@@ -245,3 +238,24 @@ function cancelForm() {
 function dismissBanner() {
   document.getElementById('successBanner').classList.add('hidden');
 }
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init() {
+  showLoading();
+  try {
+    await seedAll();
+    allPatients    = await dbGetPatients();
+    currentCounter = await dbGetCounter('bookingCounter');
+    currentBookingID = formatBookingID(currentCounter);
+    document.getElementById('bookingIDDisplay').textContent = currentBookingID;
+    loadPatientDropdown();
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+init();

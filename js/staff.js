@@ -19,30 +19,8 @@ function formatStaffID(counter) {
   return `STF-${counter.toString().padStart(5, '0')}`;
 }
 
-let currentCounter = parseInt(localStorage.getItem('staffCounter') || '12'); // start after sample data
+let currentCounter = 12;
 let currentStaffID = formatStaffID(currentCounter);
-document.getElementById('staffIDDisplay').textContent = currentStaffID;
-
-/* ══════════════════════════════════════
-   SAMPLE STAFF INIT
-══════════════════════════════════════ */
-const sampleStaff = [
-  { id:'STF-00001', deptID:'DPT-004', name:'Dr. Alan Lau',        role:'Doctor',         phone:'012-2233445', email:'alan.lau@wzy.com',  dob:'12/05/1975', address:'1, Jalan Kiara, KL.' },
-  { id:'STF-00002', deptID:'DPT-003', name:'Nurse Sarah Bee',      role:'Nurse',          phone:'017-8899001', email:'sarah.b@wzy.com',   dob:'22/08/1990', address:'45, Lorong Maju, PJ.' },
-  { id:'STF-00003', deptID:'DPT-005', name:'Tan Wei Kiat',         role:'Pharmacist',     phone:'011-5544332', email:'wk.tan@wzy.com',    dob:'05/11/1988', address:'12, Jalan SS15, Subang.' },
-  { id:'STF-00004', deptID:'DPT-001', name:'Dr. Lim Geok Eng',    role:'Doctor',         phone:'016-6677889', email:'geok.lim@wzy.com',  dob:'30/01/1968', address:'8, Condo Jaya, Cheras.' },
-  { id:'STF-00005', deptID:'DPT-002', name:'Dr. Rajesh Kumar',    role:'Doctor',         phone:'014-1122334', email:'rajesh.k@wzy.com',  dob:'14/09/1982', address:'19, Jalan Ipoh, KL.' },
-  { id:'STF-00006', deptID:'DPT-006', name:'Linda Chong',          role:'Lab Technician', phone:'013-9988776', email:'l.chong@wzy.com',   dob:'09/03/1995', address:'3, Taman Midah, KL.' },
-  { id:'STF-00007', deptID:'DPT-003', name:'Rose Receptionist',    role:'Receptionist',   phone:'018-4455667', email:'rose.r@wzy.com',    dob:'18/12/1998', address:'22, Jalan Gasing, PJ.' },
-  { id:'STF-00008', deptID:'DPT-007', name:'Dr. Sofia Ahmad',     role:'Doctor',         phone:'019-3344556', email:'sofia.a@wzy.com',   dob:'02/06/1985', address:'10, Villa 8, Shah Alam.' },
-  { id:'STF-00009', deptID:'DPT-004', name:'Ahmad Fauzi',          role:'General Worker', phone:'012-7788990', email:'fauzi.a@wzy.com',   dob:'11/10/1980', address:'5, Kg Baru, KL.' },
-  { id:'STF-00010', deptID:'DPT-010', name:'Catherine Teoh',       role:'Administrator',  phone:'017-2233114', email:'cath.t@wzy.com',    dob:'25/04/1978', address:'15, Jalan Bukit, PJ.' },
-  { id:'STF-00011', deptID:'DPT-010', name:'LynzXuan',             role:'Administrator',  phone:'019-2122222', email:'lynz.x@wzy.com',    dob:'21/07/1999', address:'6, Jalan Sity, KL.' },
-];
-
-if (!localStorage.getItem('staff')) {
-  localStorage.setItem('staff', JSON.stringify(sampleStaff));
-}
 
 /* ══════════════════════════════════════
    INLINE VALIDATION
@@ -78,7 +56,7 @@ document.querySelectorAll('input, select').forEach(el => {
 /* ══════════════════════════════════════
    SUBMIT
 ══════════════════════════════════════ */
-function submitForm() {
+async function submitForm() {
   const required = [
     { id: 'staffName',    label: 'Full Name' },
     { id: 'staffGender',  label: 'Gender' },
@@ -107,33 +85,38 @@ function submitForm() {
     return;
   }
 
-  // Save to localStorage
-  const staff = JSON.parse(localStorage.getItem('staff') || '[]');
-  staff.push({
-    id:      currentStaffID,
-    deptID:  document.getElementById('deptID').value,
-    name:    document.getElementById('staffName').value,
-    role:    document.getElementById('staffRole').value,
-    phone:   document.getElementById('staffPhone').value,
-    email:   document.getElementById('staffEmail').value,
-    dob:     document.getElementById('staffDOB').value,
-    address: document.getElementById('staffAddress').value,
-  });
-  localStorage.setItem('staff', JSON.stringify(staff));
+  showLoading();
+  try {
+    const staff = {
+      id:      currentStaffID,
+      deptID:  document.getElementById('deptID').value,
+      name:    document.getElementById('staffName').value.trim(),
+      role:    document.getElementById('staffRole').value,
+      phone:   document.getElementById('staffPhone').value.trim(),
+      email:   document.getElementById('staffEmail').value.trim(),
+      dob:     document.getElementById('staffDOB').value,
+      address: document.getElementById('staffAddress').value.trim(),
+    };
 
-  // Show success banner
-  document.getElementById('successStaffID').textContent =
-    `Staff ID: ${currentStaffID} – ${document.getElementById('staffName').value} has been registered.`;
-  document.getElementById('successBanner').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    await dbSaveStaff(staff);
+    await dbIncrementCounter('staffCounter');
 
-  // Advance counter
-  localStorage.setItem('staffCounter', currentCounter + 1);
-  currentCounter++;
-  currentStaffID = formatStaffID(currentCounter);
-  document.getElementById('staffIDDisplay').textContent = currentStaffID;
+    document.getElementById('successStaffID').textContent =
+      `Staff ID: ${currentStaffID} – ${staff.name} has been registered.`;
+    document.getElementById('successBanner').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  clearForm();
+    currentCounter++;
+    currentStaffID = formatStaffID(currentCounter);
+    document.getElementById('staffIDDisplay').textContent = currentStaffID;
+
+    clearForm();
+  } catch (e) {
+    alert('Failed to save staff. Please check your connection and try again.');
+    console.error(e);
+  } finally {
+    hideLoading();
+  }
 }
 
 /* ══════════════════════════════════════
@@ -152,3 +135,22 @@ function cancelForm() {
 function dismissBanner() {
   document.getElementById('successBanner').classList.add('hidden');
 }
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init() {
+  showLoading();
+  try {
+    await seedAll();
+    currentCounter = await dbGetCounter('staffCounter');
+    currentStaffID = formatStaffID(currentCounter);
+    document.getElementById('staffIDDisplay').textContent = currentStaffID;
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+init();

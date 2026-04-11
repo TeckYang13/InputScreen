@@ -169,11 +169,10 @@
         <label>Admission Status</label>
         <select id="admissionStatus">
           <option value="">-- Select --</option>
-          <option value="Active">Active – Currently admitted &amp; receiving care</option>
-          <option value="Discharged">Discharged – Completed treatment, has left</option>
-          <option value="Transferred">Transferred – Moved to another ward/facility</option>
+          <option value="Active">Active</option>
+          <option value="Discharged">Discharged</option>
+          <option value="Transferred">Transferred</option>
         </select>
-        <span class="field-hint">Current state of the patient's stay</span>
       </div>
       <div class="field">
         <label>Admission Date <span class="req">*</span></label>
@@ -273,6 +272,10 @@
           <option>Waived</option>
         </select>
       </div>
+      <div class="field">
+        <label>Payment Date</label>
+        <input type="text" id="payDate" class="auto-filled" readonly />
+      </div>
     </div>
   </div>
 
@@ -294,6 +297,10 @@
 
 </div><!-- end .container -->
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="../js/firebase-config.js"></script>
+<script src="../js/db.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="../js/script.js"></script>
 </body>

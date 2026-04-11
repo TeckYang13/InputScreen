@@ -1,95 +1,22 @@
 /* ══════════════════════════════════════
-   SAMPLE DATA
+   CACHED DATA
 ══════════════════════════════════════ */
-const sampleRooms = [
-  {
-    id: 'R101', floor: 1, type: 'General Ward', dailyRate: 100,
-    beds: [
-      { bedID: 'B01', status: 'Occupied',    patientID: 'PAT-2025-001', admissionDate: '01/04/2026' },
-      { bedID: 'B02', status: 'Available' },
-      { bedID: 'B03', status: 'Available' },
-      { bedID: 'B04', status: 'Occupied',    patientID: 'PAT-2025-003', admissionDate: '06/04/2026' },
-    ]
-  },
-  {
-    id: 'R102', floor: 1, type: 'General Ward', dailyRate: 100,
-    beds: [
-      { bedID: 'B01', status: 'Available' },
-      { bedID: 'B02', status: 'Maintenance' },
-      { bedID: 'B03', status: 'Available' },
-      { bedID: 'B04', status: 'Available' },
-    ]
-  },
-  {
-    id: 'R201', floor: 2, type: 'Private Room', dailyRate: 250,
-    beds: [
-      { bedID: 'B01', status: 'Occupied', patientID: 'PAT-2025-006', admissionDate: '05/04/2026' },
-    ]
-  },
-  {
-    id: 'R202', floor: 2, type: 'Private Room', dailyRate: 250,
-    beds: [
-      { bedID: 'B01', status: 'Available' },
-    ]
-  },
-  {
-    id: 'R301', floor: 3, type: 'ICU', dailyRate: 500,
-    beds: [
-      { bedID: 'B01', status: 'Occupied',    patientID: 'PAT-2025-005', admissionDate: '03/04/2026' },
-      { bedID: 'B02', status: 'Occupied',    patientID: 'PAT-2025-008', admissionDate: '07/04/2026' },
-      { bedID: 'B03', status: 'Maintenance' },
-      { bedID: 'B04', status: 'Available' },
-      { bedID: 'B05', status: 'Available' },
-      { bedID: 'B06', status: 'Available' },
-    ]
-  },
-];
-
-const samplePatients = [
-  { id:'PAT-2025-001', name:'John Tan Ah Kao',        gender:'Male',   dob:'15/05/1985', phone:'012-3456789', email:'john.tan@email.com',   address:'12, Jalan SS2, Petaling Jaya' },
-  { id:'PAT-2025-002', name:'Siti Aminah Binti Ali',  gender:'Female', dob:'10/07/1990', phone:'017-6543210', email:'siti@email.com',        address:'5, Jalan Melati, KL' },
-  { id:'PAT-2025-003', name:'Robert Low',              gender:'Male',   dob:'22/03/1978', phone:'011-9988776', email:'rlow@email.com',        address:'88, Lorong Bukit, Penang' },
-  { id:'PAT-2025-004', name:'Priya Kaur',              gender:'Female', dob:'30/08/2000', phone:'014-4433221', email:'priya.k@email.com',     address:'3, Jalan Gasing, PJ' },
-  { id:'PAT-2025-005', name:'David Lim Teck Wee',     gender:'Male',   dob:'12/12/1965', phone:'018-6655443', email:'davidlim@email.com',    address:'21, Condo Ria, Subang' },
-  { id:'PAT-2025-006', name:'Mike Wong',               gender:'Male',   dob:'05/01/1982', phone:'013-1112223', email:'mike.w@email.com',      address:'10, Kg Baru, Ampang' },
-  { id:'PAT-2025-007', name:'Nurul Huda',              gender:'Female', dob:'09/07/1995', phone:'013-4445556', email:'nurul.h@email.com',     address:'10, Kg Baru, Selayang' },
-  { id:'PAT-2025-008', name:'Kevin Raj',               gender:'Male',   dob:'25/03/1982', phone:'019-7778889', email:'kevin@email.com',       address:'2, Villa 22, Shah Alam' },
-  { id:'PAT-2025-009', name:'Chong Wei Ling',          gender:'Female', dob:'14/11/1990', phone:'012-5554433', email:'wling@email.com',       address:'Green Lane, Ipoh' },
-  { id:'PAT-2025-010', name:'Sarah Jenkins',           gender:'Female', dob:'06/03/1975', phone:'011-3332211', email:'sarah.j@email.com',     address:'9, Residency, Cyberjaya' },
-];
-
-/* ══════════════════════════════════════
-   LOCALSTORAGE HELPERS
-══════════════════════════════════════ */
-function initRooms() {
-  if (!localStorage.getItem('rooms')) {
-    localStorage.setItem('rooms', JSON.stringify(sampleRooms));
-  }
-}
-
-function initPatients() {
-  if (!localStorage.getItem('patients')) {
-    localStorage.setItem('patients', JSON.stringify(samplePatients));
-  }
-}
-
-function getRooms()       { return JSON.parse(localStorage.getItem('rooms')    || '[]'); }
-function getPatients()    { return JSON.parse(localStorage.getItem('patients') || '[]'); }
-function saveRooms(rooms) { localStorage.setItem('rooms', JSON.stringify(rooms)); }
+let allRooms              = [];
+let allPatients           = [];
+let allPendingAdmissions  = [];
 
 /* ══════════════════════════════════════
    STATS
 ══════════════════════════════════════ */
 function renderStats() {
-  const rooms = getRooms();
   let totalBeds = 0, occupied = 0, available = 0, maintenance = 0;
-  rooms.forEach(r => r.beds.forEach(b => {
+  allRooms.forEach(r => r.beds.forEach(b => {
     totalBeds++;
     if      (b.status === 'Occupied')    occupied++;
     else if (b.status === 'Available')   available++;
     else if (b.status === 'Maintenance') maintenance++;
   }));
-  document.getElementById('statRooms').textContent       = rooms.length;
+  document.getElementById('statRooms').textContent       = allRooms.length;
   document.getElementById('statBeds').textContent        = totalBeds;
   document.getElementById('statOccupied').textContent    = occupied;
   document.getElementById('statAvailable').textContent   = available;
@@ -125,18 +52,17 @@ function switchFloor(floor, btn) {
    ROOM GRID
 ══════════════════════════════════════ */
 const typeAccent = {
-  'General Ward':   'blue',
-  'Private Room':   'teal',
-  'ICU':            'red',
-  'Paediatric Ward':'amber',
-  'Maternity Ward': 'purple',
+  'General Ward':    'blue',
+  'Private Room':    'teal',
+  'ICU':             'red',
+  'Paediatric Ward': 'amber',
+  'Maternity Ward':  'purple',
 };
 
 function renderRoomGrid() {
-  const rooms  = getRooms();
   const search = (document.getElementById('roomSearch').value || '').toLowerCase();
 
-  const filtered = rooms.filter(r => {
+  const filtered = allRooms.filter(r => {
     const matchFloor  = activeFloor === 0 || r.floor === activeFloor;
     const matchSearch = !search || r.id.toLowerCase().includes(search) || r.type.toLowerCase().includes(search);
     return matchFloor && matchSearch;
@@ -149,7 +75,6 @@ function renderRoomGrid() {
     return;
   }
 
-  // Group by floor if showing all
   if (activeFloor === 0) {
     const floors = [...new Set(filtered.map(r => r.floor))].sort();
     grid.innerHTML = floors.map(fl => {
@@ -165,17 +90,17 @@ function renderRoomGrid() {
 }
 
 function roomCardHTML(room) {
-  const occupied      = room.beds.filter(b => b.status === 'Occupied').length;
-  const total         = room.beds.length;
-  const pct           = Math.round((occupied / total) * 100);
-  const accent        = typeAccent[room.type] || 'blue';
+  const occupied = room.beds.filter(b => b.status === 'Occupied').length;
+  const total    = room.beds.length;
+  const pct      = Math.round((occupied / total) * 100);
+  const accent   = typeAccent[room.type] || 'blue';
 
   const bedsHTML = room.beds.map(bed => {
-    const cls   = bed.status.toLowerCase().replace(' ', '-');
-    const tip   = bed.status === 'Occupied'
+    const cls  = bed.status.toLowerCase().replace(' ', '-');
+    const tip  = bed.status === 'Occupied'
       ? `${bed.bedID} – ${bed.patientID}`
       : `${bed.bedID} – ${bed.status}`;
-    const icon  = bed.status === 'Occupied' ? 'fa-user' : bed.status === 'Maintenance' ? 'fa-tools' : 'fa-check';
+    const icon = bed.status === 'Occupied' ? 'fa-user' : bed.status === 'Maintenance' ? 'fa-tools' : 'fa-check';
     return `<div class="bed bed-${cls}" title="${tip}" onclick="openBedModal('${room.id}','${bed.bedID}')">
       <span class="bed-id-label">${bed.bedID}</span>
       <i class="fas ${icon}"></i>
@@ -209,10 +134,9 @@ function roomCardHTML(room) {
 let activeBed = null;
 
 function openBedModal(roomID, bedID) {
-  const rooms    = getRooms();
-  const room     = rooms.find(r => r.id === roomID);
-  const bed      = room.beds.find(b => b.bedID === bedID);
-  activeBed      = { roomID, bedID };
+  const room = allRooms.find(r => r.id === roomID);
+  const bed  = room.beds.find(b => b.bedID === bedID);
+  activeBed  = { roomID, bedID };
 
   document.getElementById('modalTitle').textContent = `Room ${roomID} · Bed ${bedID}`;
   document.getElementById('modalSub').textContent   = `${room.type} – Floor ${room.floor} · RM ${room.dailyRate}/day`;
@@ -221,9 +145,9 @@ function openBedModal(roomID, bedID) {
   const footEl = document.getElementById('modalFoot');
 
   if (bed.status === 'Occupied') {
-    const patient  = getPatients().find(p => p.id === bed.patientID);
-    const days     = calcDays(bed.admissionDate);
-    const cost     = days * room.dailyRate;
+    const patient = allPatients.find(p => p.id === bed.patientID);
+    const days    = calcDays(bed.admissionDate);
+    const cost    = days * room.dailyRate;
 
     bodyEl.innerHTML = `
       <div class="status-badge badge-occupied"><i class="fas fa-user-injured"></i> Occupied</div>
@@ -233,6 +157,7 @@ function openBedModal(roomID, bedID) {
         <div class="pi-row"><span class="pi-label"><i class="fas fa-venus-mars"></i> Gender</span><span class="pi-val">${patient ? patient.gender : '–'}</span></div>
         <div class="pi-row"><span class="pi-label"><i class="fas fa-phone"></i> Phone</span><span class="pi-val">${patient ? patient.phone : '–'}</span></div>
         <div class="pi-row"><span class="pi-label"><i class="fas fa-calendar-plus"></i> Admission</span><span class="pi-val">${bed.admissionDate}</span></div>
+        <div class="pi-row"><span class="pi-label"><i class="fas fa-calendar-minus"></i> Discharge</span><span class="pi-val">${bed.dischargeDate || '<span style="color:var(--gray-400);font-style:italic;">Not set</span>'}</span></div>
         <div class="pi-row"><span class="pi-label"><i class="fas fa-clock"></i> Days Admitted</span><span class="pi-val">${days} day${days !== 1 ? 's' : ''}</span></div>
       </div>
       <div class="accrued-box">
@@ -241,23 +166,18 @@ function openBedModal(roomID, bedID) {
       </div>`;
 
     footEl.innerHTML = `
-      <button class="btn btn-secondary" onclick="setBedStatus('Maintenance')"><i class="fas fa-tools"></i> Set Maintenance</button>
-      <button class="btn btn-danger"    onclick="dischargePatient()"><i class="fas fa-sign-out-alt"></i> Discharge Patient</button>`;
+      <button class="btn btn-danger" onclick="dischargePatient()"><i class="fas fa-sign-out-alt"></i> Discharge Patient</button>`;
 
   } else if (bed.status === 'Available') {
-    const allRooms    = getRooms();
     const occupiedIDs = [];
     allRooms.forEach(r => r.beds.forEach(b => { if (b.status === 'Occupied') occupiedIDs.push(b.patientID); }));
 
-    // Only show patients with a pending admission request
-    // If patient specified a preferred room, only show them in that room
-    const pending  = JSON.parse(localStorage.getItem('pendingAdmissions') || '[]');
-    const eligible = pending.filter(p =>
+    const eligible   = allPendingAdmissions.filter(p =>
       !occupiedIDs.includes(p.patientID) &&
       (!p.preferredRoomID || p.preferredRoomID === roomID)
     );
     const eligibleIDs = eligible.map(p => p.patientID);
-    const freePats    = getPatients().filter(p => eligibleIDs.includes(p.id));
+    const freePats    = allPatients.filter(p => eligibleIDs.includes(p.id));
 
     if (freePats.length === 0) {
       bodyEl.innerHTML = `
@@ -285,9 +205,16 @@ function openBedModal(roomID, bedID) {
             <span id="admitPatErr" class="admit-err hidden"><i class="fas fa-exclamation-circle"></i> Please select a patient.</span>
           </div>
           <div id="admissionInfoBox" class="admission-info-box hidden"></div>
-          <div class="field" style="margin-top:10px;">
-            <label>Admission Date <span class="req">*</span></label>
-            <input type="date" id="admitDateSel" />
+          <div class="grid-2" style="margin-top:10px; gap:10px;">
+            <div class="field">
+              <label>Admission Date <span class="req">*</span></label>
+              <input type="date" id="admitDateSel" onchange="syncDischargMin()" />
+            </div>
+            <div class="field">
+              <label>Discharge Date</label>
+              <input type="date" id="admitDischargeSel" />
+              <span class="field-hint">Leave empty if unknown</span>
+            </div>
           </div>
         </div>`;
 
@@ -322,13 +249,21 @@ function calcDays(dmyStr) {
   return Math.max(0, Math.round((now - adm) / 86400000));
 }
 
-function setBedStatus(status) {
+async function setBedStatus(status) {
   if (!activeBed) return;
-  const rooms = getRooms();
-  const bed   = rooms.find(r => r.id === activeBed.roomID).beds.find(b => b.bedID === activeBed.bedID);
-  bed.status  = status;
-  if (status !== 'Occupied') { delete bed.patientID; delete bed.admissionDate; }
-  saveRooms(rooms);
+  const room = allRooms.find(r => r.id === activeBed.roomID);
+  const bed  = room.beds.find(b => b.bedID === activeBed.bedID);
+  bed.status = status;
+  if (status !== 'Occupied') { delete bed.patientID; delete bed.admissionDate; delete bed.dischargeDate; }
+  showLoading();
+  try {
+    await dbSaveRoom(room);
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to update bed status.', true);
+  } finally {
+    hideLoading();
+  }
   renderStats();
   renderRoomGrid();
   document.getElementById('bedModal').classList.add('hidden');
@@ -341,27 +276,62 @@ function showAdmissionInfo() {
   const infoBox = document.getElementById('admissionInfoBox');
   if (!patID) { infoBox.classList.add('hidden'); return; }
 
-  const pending = JSON.parse(localStorage.getItem('pendingAdmissions') || '[]');
-  const req     = pending.find(p => p.patientID === patID);
+  const req = allPendingAdmissions.find(p => p.patientID === patID);
   if (!req) { infoBox.classList.add('hidden'); return; }
 
-  // Pre-fill admission date from request
   if (req.admissionDate) {
     const [d, m, y] = req.admissionDate.split('/');
     document.getElementById('admitDateSel').value = `${y}-${m}-${d}`;
   }
+  if (req.dischargeDate) {
+    const [d, m, y] = req.dischargeDate.split('/');
+    document.getElementById('admitDischargeSel').value = `${y}-${m}-${d}`;
+  } else {
+    document.getElementById('admitDischargeSel').value = '';
+  }
+  syncDischargMin();
 
-  const prefRoom = req.preferredRoomID ? `<span class="info-tag"><i class="fas fa-door-open"></i> Preferred Room: ${req.preferredRoomID}${req.preferredBedID ? ' · ' + req.preferredBedID : ''}</span>` : '';
+  let durationHTML = '';
+  if (req.admissionDate && req.dischargeDate) {
+    const [ad, am, ay] = req.admissionDate.split('/').map(Number);
+    const [dd, dm, dy] = req.dischargeDate.split('/').map(Number);
+    const days = Math.round((new Date(dy, dm-1, dd) - new Date(ay, am-1, ad)) / 86400000);
+    durationHTML = `<div class="adm-info-row adm-duration">
+      <i class="fas fa-hourglass-half"></i>
+      <span>${req.admissionDate} → ${req.dischargeDate}</span>
+      <span class="duration-badge">${days} day${days !== 1 ? 's' : ''}</span>
+    </div>`;
+  } else {
+    durationHTML = `<div class="adm-info-row">
+      <i class="fas fa-calendar-plus"></i>
+      <span>From: <strong>${req.admissionDate || '–'}</strong> &nbsp;·&nbsp; No discharge date set</span>
+    </div>`;
+  }
+
+  const prefRoom = req.preferredRoomID
+    ? `<div class="adm-info-row"><i class="fas fa-door-open"></i> Preferred: <strong>${req.preferredRoomID}${req.preferredBedID ? ' · ' + req.preferredBedID : ''}</strong></div>`
+    : '';
+
   infoBox.innerHTML = `
-    <div class="adm-info-row"><i class="fas fa-calendar-plus"></i> Requested: ${req.admissionDate || '–'}</div>
-    <div class="adm-info-row"><i class="fas fa-comment-medical"></i> Reason: ${req.admissionReason || '–'}</div>
-    ${prefRoom ? `<div class="adm-info-row">${prefRoom}</div>` : ''}`;
+    ${durationHTML}
+    <div class="adm-info-row"><i class="fas fa-comment-medical"></i> ${req.admissionReason || '–'}</div>
+    ${prefRoom}`;
   infoBox.classList.remove('hidden');
 }
 
-function admitPatient() {
+function syncDischargMin() {
+  const admVal = document.getElementById('admitDateSel').value;
+  const disEl  = document.getElementById('admitDischargeSel');
+  if (admVal) {
+    disEl.min = admVal;
+    if (disEl.value && disEl.value < admVal) disEl.value = '';
+  }
+}
+
+async function admitPatient() {
   const patSel  = document.getElementById('admitPatSel');
   const dateVal = document.getElementById('admitDateSel').value;
+  const disVal  = document.getElementById('admitDischargeSel').value;
 
   if (!patSel.value) {
     document.getElementById('admitPatErr').classList.remove('hidden');
@@ -372,19 +342,29 @@ function admitPatient() {
     return;
   }
 
-  const [y, m, d] = dateVal.split('-');
-  const admDate   = `${d}/${m}/${y}`;
+  const toDBY = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
 
-  const rooms = getRooms();
-  const bed   = rooms.find(r => r.id === activeBed.roomID).beds.find(b => b.bedID === activeBed.bedID);
+  const room = allRooms.find(r => r.id === activeBed.roomID);
+  const bed  = room.beds.find(b => b.bedID === activeBed.bedID);
   bed.status        = 'Occupied';
   bed.patientID     = patSel.value;
-  bed.admissionDate = admDate;
-  saveRooms(rooms);
+  bed.admissionDate = toDBY(dateVal);
+  if (disVal) bed.dischargeDate = toDBY(disVal);
+  else        delete bed.dischargeDate;
 
-  // Remove from pendingAdmissions
-  const pending = JSON.parse(localStorage.getItem('pendingAdmissions') || '[]');
-  localStorage.setItem('pendingAdmissions', JSON.stringify(pending.filter(p => p.patientID !== patSel.value)));
+  showLoading();
+  try {
+    await dbSaveRoom(room);
+    await dbDeletePendingAdmission(patSel.value);
+    allPendingAdmissions = allPendingAdmissions.filter(p => p.patientID !== patSel.value);
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to admit patient.', true);
+    hideLoading();
+    return;
+  } finally {
+    hideLoading();
+  }
 
   renderStats();
   renderRoomGrid();
@@ -427,7 +407,7 @@ function openRoomModal(roomID, e) {
   const bedsField = document.getElementById('rmBedsField');
 
   if (isEdit) {
-    const room = getRooms().find(r => r.id === roomID);
+    const room = allRooms.find(r => r.id === roomID);
     document.getElementById('rmID').value    = room.id;
     document.getElementById('rmID').readOnly = true;
     document.getElementById('rmFloor').value = room.floor;
@@ -455,7 +435,7 @@ function closeRoomModal(e) {
   editingRoomID = null;
 }
 
-function saveRoom() {
+async function saveRoom() {
   const id      = document.getElementById('rmID').value.trim().toUpperCase();
   const floor   = parseInt(document.getElementById('rmFloor').value);
   const type    = document.getElementById('rmType').value;
@@ -474,10 +454,9 @@ function saveRoom() {
     return;
   }
 
-  const rooms = getRooms();
-
+  let roomData;
   if (!editingRoomID) {
-    if (rooms.find(r => r.id === id)) {
+    if (allRooms.find(r => r.id === id)) {
       errEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> Room ID "${id}" already exists.`;
       errEl.classList.remove('hidden');
       return;
@@ -486,34 +465,57 @@ function saveRoom() {
       bedID: 'B' + String(i + 1).padStart(2, '0'),
       status: 'Available',
     }));
-    rooms.push({ id, floor, type, dailyRate: rate, beds: newBeds });
-    showToast(`Room ${id} added successfully.`);
+    roomData = { id, floor, type, dailyRate: rate, beds: newBeds };
+    allRooms.push(roomData);
   } else {
-    const room     = rooms.find(r => r.id === editingRoomID);
-    room.floor     = floor;
-    room.type      = type;
-    room.dailyRate = rate;
-    showToast(`Room ${editingRoomID} updated.`);
+    roomData = allRooms.find(r => r.id === editingRoomID);
+    roomData.floor     = floor;
+    roomData.type      = type;
+    roomData.dailyRate = rate;
   }
 
-  saveRooms(rooms);
+  showLoading();
+  try {
+    await dbSaveRoom(roomData);
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to save room.', true);
+    hideLoading();
+    return;
+  } finally {
+    hideLoading();
+  }
+
+  showToast(editingRoomID ? `Room ${editingRoomID} updated.` : `Room ${id} added successfully.`);
   renderStats();
   renderRoomGrid();
   document.getElementById('roomModal').classList.add('hidden');
   editingRoomID = null;
 }
 
-function deleteRoom(roomID, e) {
+async function deleteRoom(roomID, e) {
   if (e) e.stopPropagation();
-  const rooms    = getRooms();
-  const room     = rooms.find(r => r.id === roomID);
+  const room     = allRooms.find(r => r.id === roomID);
   const occupied = room.beds.filter(b => b.status === 'Occupied').length;
   if (occupied > 0) {
     showToast(`Cannot delete Room ${roomID} — ${occupied} bed(s) still occupied.`, true);
     return;
   }
   if (!confirm(`Delete Room ${roomID}? This cannot be undone.`)) return;
-  saveRooms(rooms.filter(r => r.id !== roomID));
+
+  showLoading();
+  try {
+    await dbDeleteRoom(roomID);
+    allRooms = allRooms.filter(r => r.id !== roomID);
+  } catch (e) {
+    console.error(e);
+    showToast('Failed to delete room.', true);
+    hideLoading();
+    return;
+  } finally {
+    hideLoading();
+  }
+
   renderStats();
   renderRoomGrid();
   showToast(`Room ${roomID} deleted.`);
@@ -533,49 +535,22 @@ function showToast(msg, isError = false) {
 /* ══════════════════════════════════════
    INIT
 ══════════════════════════════════════ */
-const samplePendingAdmissions = [
-  {
-    patientID:       'PAT-2025-002',
-    treatmentID:     'TRT-20260407-00001',
-    admissionDate:   '08/04/2026',
-    admissionReason: 'Follow-up on gynaecology consultation requiring overnight monitoring.',
-    preferredRoomID: 'R201',
-    preferredBedID:  null,
-  },
-  {
-    patientID:       'PAT-2025-004',
-    treatmentID:     'TRT-20260408-00002',
-    admissionDate:   '08/04/2026',
-    admissionReason: 'Chest discomfort, requested cardiology observation and monitoring.',
-    preferredRoomID: null,
-    preferredBedID:  null,
-  },
-  {
-    patientID:       'PAT-2025-007',
-    treatmentID:     'TRT-20260408-00003',
-    admissionDate:   '08/04/2026',
-    admissionReason: 'Persistent headache and dizziness, requires neurological assessment.',
-    preferredRoomID: 'R102',
-    preferredBedID:  'B03',
-  },
-  {
-    patientID:       'PAT-2025-009',
-    treatmentID:     'TRT-20260407-00004',
-    admissionDate:   '07/04/2026',
-    admissionReason: 'Post-surgery recovery following appendectomy.',
-    preferredRoomID: null,
-    preferredBedID:  null,
-  },
-];
-
-function initPendingAdmissions() {
-  if (!localStorage.getItem('pendingAdmissions')) {
-    localStorage.setItem('pendingAdmissions', JSON.stringify(samplePendingAdmissions));
+async function init() {
+  showLoading();
+  try {
+    await seedAll();
+    [allRooms, allPatients, allPendingAdmissions] = await Promise.all([
+      dbGetRooms(),
+      dbGetPatients(),
+      dbGetPendingAdmissions(),
+    ]);
+    renderStats();
+    renderRoomGrid();
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  } finally {
+    hideLoading();
   }
 }
 
-initPendingAdmissions();
-initRooms();
-initPatients();
-renderStats();
-renderRoomGrid();
+init();

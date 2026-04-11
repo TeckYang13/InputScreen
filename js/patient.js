@@ -19,9 +19,9 @@ function formatPatientID(counter) {
   return `PAT-${today.getFullYear()}-${counter.toString().padStart(3, '0')}`;
 }
 
-let currentCounter  = parseInt(localStorage.getItem('patientCounter') || '1');
+let currentCounter   = 1;
 let currentPatientID = formatPatientID(currentCounter);
-document.getElementById('patientIDDisplay').textContent = currentPatientID;
+let allPatients      = [];
 
 /* ══════════════════════════════════════
    INLINE VALIDATION
@@ -56,7 +56,7 @@ document.querySelectorAll('input, select').forEach(el => {
 
 /* ── IC auto-format: YYMMDD-PB-XXXX ── */
 document.getElementById('patientIC').addEventListener('input', function () {
-  let val = this.value.replace(/\D/g, ''); // digits only
+  let val = this.value.replace(/\D/g, '');
   if (val.length > 6)  val = val.slice(0, 6) + '-' + val.slice(6);
   if (val.length > 9)  val = val.slice(0, 9) + '-' + val.slice(9);
   this.value = val;
@@ -65,7 +65,7 @@ document.getElementById('patientIC').addEventListener('input', function () {
 /* ══════════════════════════════════════
    SUBMIT
 ══════════════════════════════════════ */
-function submitForm() {
+async function submitForm() {
   const required = [
     { id: 'patientName',   label: 'Full Name' },
     { id: 'patientIC',     label: 'IC Number' },
@@ -81,7 +81,6 @@ function submitForm() {
 
   let hasError = false;
 
-  // 1. Required check
   required.forEach(f => {
     const el = document.getElementById(f.id);
     if (!el.value.trim()) {
@@ -92,14 +91,14 @@ function submitForm() {
     }
   });
 
-  // 2. Full Name – letters, spaces, hyphens, slashes only; min 2 chars
+  // Name validation
   const nameVal = document.getElementById('patientName').value.trim();
   if (nameVal && (nameVal.length < 2 || !/^[a-zA-Z\s\-\/'\.]+$/.test(nameVal))) {
     setError('patientName', 'Name must contain letters only (min 2 characters).');
     hasError = true;
   }
 
-  // 3. IC – format YYMMDD-PB-XXXX + uniqueness
+  // IC format + uniqueness
   const icVal = document.getElementById('patientIC').value.replace(/-/g, '');
   if (icVal) {
     if (icVal.length !== 12 || !/^\d{12}$/.test(icVal)) {
@@ -107,36 +106,35 @@ function submitForm() {
       hasError = true;
     } else {
       const icFormatted = `${icVal.slice(0,6)}-${icVal.slice(6,8)}-${icVal.slice(8)}`;
-      const existing    = JSON.parse(localStorage.getItem('patients') || '[]');
-      if (existing.some(p => p.ic === icFormatted)) {
+      if (allPatients.some(p => p.ic === icFormatted)) {
         setError('patientIC', 'This IC number is already registered.');
         hasError = true;
       }
     }
   }
 
-  // 4. Phone – Malaysian format: 01X-XXXXXXX / 01X-XXXXXXXX / 0X-XXXXXXXX
+  // Phone – Malaysian format
   const phoneVal = document.getElementById('patientPhone').value.trim();
   if (phoneVal && !/^(01[0-9]-\d{7,8}|0[2-9]-\d{7,8})$/.test(phoneVal)) {
-    setError('patientPhone', 'Enter a valid Malaysian phone (e.g. 012-3456789 or 03-12345678).');
+    setError('patientPhone', 'Enter a valid Malaysian phone (e.g. 012-3456789).');
     hasError = true;
   }
 
-  // 5. Email – basic format
+  // Email
   const emailVal = document.getElementById('patientEmail').value.trim();
   if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
     setError('patientEmail', 'Enter a valid email address.');
     hasError = true;
   }
 
-  // 6. Postcode – exactly 5 digits
+  // Postcode
   const postcodeVal = document.getElementById('postcode').value.trim();
   if (postcodeVal && !/^\d{5}$/.test(postcodeVal)) {
     setError('postcode', 'Postcode must be exactly 5 digits.');
     hasError = true;
   }
 
-  // 7. City – letters only
+  // City
   const cityVal = document.getElementById('city').value.trim();
   if (cityVal && !/^[a-zA-Z\s\-\.]+$/.test(cityVal)) {
     setError('city', 'City name must contain letters only.');
@@ -149,36 +147,42 @@ function submitForm() {
     return;
   }
 
-  // Save to localStorage
-  const address  = `${document.getElementById('streetAddress').value}, ${document.getElementById('city').value}, ${document.getElementById('postcode').value}, ${document.getElementById('state').value}`;
-  const icRaw    = document.getElementById('patientIC').value.replace(/-/g, '');
-  const icFormatted = `${icRaw.slice(0,6)}-${icRaw.slice(6,8)}-${icRaw.slice(8)}`;
-  const patients = JSON.parse(localStorage.getItem('patients') || '[]');
-  patients.push({
-    id:      currentPatientID,
-    ic:      icFormatted,
-    name:    document.getElementById('patientName').value,
-    phone:   document.getElementById('patientPhone').value,
-    email:   document.getElementById('patientEmail').value,
-    gender:  document.getElementById('patientGender').value,
-    dob:     document.getElementById('patientDOB').value,
-    address: address,
-  });
-  localStorage.setItem('patients', JSON.stringify(patients));
+  showLoading();
+  try {
+    const icRaw       = document.getElementById('patientIC').value.replace(/-/g, '');
+    const icFormatted = `${icRaw.slice(0,6)}-${icRaw.slice(6,8)}-${icRaw.slice(8)}`;
+    const address     = `${document.getElementById('streetAddress').value}, ${document.getElementById('city').value}, ${document.getElementById('postcode').value}, ${document.getElementById('state').value}`;
 
-  // Show success banner
-  document.getElementById('successPatientID').textContent =
-    `Patient ID: ${currentPatientID} has been registered.`;
-  document.getElementById('successBanner').classList.remove('hidden');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+    const patient = {
+      id:      currentPatientID,
+      ic:      icFormatted,
+      name:    document.getElementById('patientName').value.trim(),
+      phone:   document.getElementById('patientPhone').value.trim(),
+      email:   document.getElementById('patientEmail').value.trim(),
+      gender:  document.getElementById('patientGender').value,
+      dob:     document.getElementById('patientDOB').value,
+      address: address,
+    };
 
-  // Advance counter
-  localStorage.setItem('patientCounter', currentCounter + 1);
-  currentCounter  = currentCounter + 1;
-  currentPatientID = formatPatientID(currentCounter);
-  document.getElementById('patientIDDisplay').textContent = currentPatientID;
+    await dbSavePatient(patient);
+    await dbIncrementCounter('patientCounter');
 
-  clearForm();
+    allPatients.push(patient);
+    currentCounter++;
+    currentPatientID = formatPatientID(currentCounter);
+    document.getElementById('patientIDDisplay').textContent = currentPatientID;
+
+    document.getElementById('successPatientID').textContent =
+      `Patient ID: ${patient.id} has been registered.`;
+    document.getElementById('successBanner').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    clearForm();
+  } catch (e) {
+    alert('Failed to save patient. Please check your connection and try again.');
+    console.error(e);
+  } finally {
+    hideLoading();
+  }
 }
 
 /* ══════════════════════════════════════
@@ -197,3 +201,23 @@ function cancelForm() {
 function dismissBanner() {
   document.getElementById('successBanner').classList.add('hidden');
 }
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function init() {
+  showLoading();
+  try {
+    await seedAll();
+    allPatients    = await dbGetPatients();
+    currentCounter = await dbGetCounter('patientCounter');
+    currentPatientID = formatPatientID(currentCounter);
+    document.getElementById('patientIDDisplay').textContent = currentPatientID;
+  } catch (e) {
+    console.error('Failed to load data:', e);
+  } finally {
+    hideLoading();
+  }
+}
+
+init();
